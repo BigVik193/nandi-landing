@@ -8,8 +8,12 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-figtree);
+  --font-title: var(--font-bricolage-grotesque);
+  --color-hero: #e6d1fc;
+  --color-section: #f7f7eb;
+  --color-pricing: #eeeedd;
+  --color-card: #f7f7eb;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +26,9 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-figtree), sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
 }
