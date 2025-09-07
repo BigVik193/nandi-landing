@@ -94,7 +94,7 @@ export default function StatsSection() {
   };
 
   return (
-    <section className="bg-section py-24">
+    <section className="bg-pricing py-24">
       <div className="max-w-7xl mx-auto px-8">
         <div ref={statsRef} className="grid md:grid-cols-3 gap-12 text-center">
           <div className="space-y-2">

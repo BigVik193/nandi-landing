@@ -3,7 +3,7 @@ import { HiSparkles } from 'react-icons/hi2';
 
 export default function PersonalizeSection() {
   return (
-    <section className="bg-section py-20">
+    <section id="personalize" className="bg-section py-20">
       <div className="max-w-7xl mx-auto px-8">
         {/* Title and Description */}
         <div className="text-center mb-16 space-y-6">

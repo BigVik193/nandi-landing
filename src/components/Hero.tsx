@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export default function Hero() {
   return (
-    <main className="max-w-7xl mx-auto px-8 py-12">
+    <main className="max-w-7xl mx-auto px-8 pb-6">
       <div className="grid lg:grid-cols-2 gap-12 items-center">
         {/* Left Side - Text Content */}
         <div className="space-y-8">
@@ -21,38 +21,27 @@ export default function Hero() {
           </p>
         </div>
 
-        {/* Right Side - Image Cards */}
-        <div className="space-y-4">
-          {/* Top Card - Laptop */}
-          <div className="w-full h-48 rounded-2xl overflow-hidden shadow-lg">
+        {/* Right Side - Hero Graphic */}
+        <div className="relative flex flex-col items-center justify-center min-h-[600px]">
+          {/* Logo Graphic */}
+          <div className="relative">
             <Image
-              src="/hero1.png"
-              alt="AI-powered store optimization dashboard"
-              width={400}
-              height={192}
-              className="w-full h-full object-cover"
+              src="/logo-graphic.png"
+              alt="Platform integrations graphic"
+              width={500}
+              height={250}
+              className="w-[500px] h-auto object-contain"
             />
           </div>
           
-          {/* Middle Card - Person */}
-          <div className="w-full h-48 rounded-2xl overflow-hidden shadow-lg">
+          {/* Tula Mascot */}
+          <div className="relative">
             <Image
-              src="/hero1.png"
-              alt="Merchant working with optimized store"
-              width={400}
-              height={192}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          
-          {/* Bottom Card - Products */}
-          <div className="w-full h-32 rounded-2xl overflow-hidden shadow-lg">
-            <Image
-              src="/hero1.png"
-              alt="Product showcase and layout optimization"
-              width={400}
-              height={128}
-              className="w-full h-full object-cover"
+              src="/tula-mascot.png"
+              alt="Tula AI mascot working on computer"
+              width={500}
+              height={500}
+              className="w-[500px] h-[500px] object-contain"
             />
           </div>
         </div>
