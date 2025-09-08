@@ -10,7 +10,7 @@ export default function Footer() {
               <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
                 <div className="w-4 h-4 bg-black transform rotate-45"></div>
               </div>
-              <span className="text-2xl font-bold text-white">Tula</span>
+              <span className="text-2xl font-bold text-white">Nandi</span>
             </div>
             <p className="text-gray-300 leading-relaxed">
               Your always-on growth engine. Supercharge your store with AI-powered optimization.
@@ -59,7 +59,7 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             {/* Copyright */}
             <div className="text-gray-400 text-sm">
-              © 2024 Tula. All rights reserved.
+              © 2024 Nandi. All rights reserved.
             </div>
 
             {/* Legal Links */}

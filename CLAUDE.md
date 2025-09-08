@@ -12,7 +12,7 @@ The design language should be fun, colorful, and visually engaging—big product
 
 The landing page should feel effortless and exciting, making growth feel automatic. Key sections include: a bold hero with imagery of a storefront dynamically improving; social proof with recognizable merchant types or logos; a demo animation showing the platform connecting to Shopify and driving sales; testimonials and case studies; and a clear pricing section with simple subscription tiers. The overall impression should be approachable, trustworthy, and focused on boosting revenue for small to mid-sized merchants.
 
-This is a Next.js 15.5.2 project using the App Router architecture with TypeScript and Tailwind CSS v4. The project appears to be a landing page for "Tula" and uses pnpm as the package manager.
+This is a Next.js 15.5.2 project using the App Router architecture with TypeScript and Tailwind CSS v4. The project appears to be a landing page for "Nandi" and uses pnpm as the package manager.
 
 ## Development Commands
 

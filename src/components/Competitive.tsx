@@ -6,7 +6,7 @@ export default function Competitive() {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-5xl lg:text-6xl font-medium text-black leading-tight font-title mb-6">
-            Tula executes while
+            Nandi executes while
             <br />
             others just suggest
           </h2>
@@ -25,7 +25,7 @@ export default function Competitive() {
                     <div className="w-6 h-6 bg-black rounded-lg flex items-center justify-center">
                       <div className="w-3 h-3 bg-white transform rotate-45"></div>
                     </div>
-                    <span className="text-xl font-bold text-black">Tula</span>
+                    <span className="text-xl font-bold text-black">Nandi</span>
                   </div>
                 </th>
                 <th className="text-center py-4 px-8 w-3/12">

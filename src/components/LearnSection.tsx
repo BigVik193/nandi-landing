@@ -12,7 +12,7 @@ export default function LearnSection() {
           </h2>
           
           <p className="text-xl text-gray-700 leading-relaxed">
-            Tula continuously runs experiments to find the best way to convert your customers. We're constantly testing headlines, images, color schemes, layouts, and CTAs in real-time. Using deep analytics with Bayesian models, A/B testing frameworks, and multi-armed bandit algorithms, we adapt and respond instantly to maximize your sales conversions.
+            Nandi continuously runs experiments to find the best way to convert your customers. We're constantly testing headlines, images, color schemes, layouts, and CTAs in real-time. Using deep analytics with Bayesian models, A/B testing frameworks, and multi-armed bandit algorithms, we adapt and respond instantly to maximize your sales conversions.
           </p>
         </div>
 

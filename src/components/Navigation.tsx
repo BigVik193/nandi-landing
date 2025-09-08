@@ -5,7 +5,7 @@ export default function Navigation() {
         <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
           <div className="w-4 h-4 bg-white transform rotate-45"></div>
         </div>
-        <span className="text-2xl font-bold text-black">Tula</span>
+        <span className="text-2xl font-bold text-black">Nandi</span>
       </div>
       
       <div className="hidden md:flex items-center space-x-8">

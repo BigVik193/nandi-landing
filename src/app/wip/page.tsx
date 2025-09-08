@@ -9,7 +9,7 @@ export default function WorkInProgress() {
           <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
             <div className="w-6 h-6 bg-white transform rotate-45"></div>
           </div>
-          <span className="text-4xl font-bold text-black">Tula</span>
+          <span className="text-4xl font-bold text-black">Nandi</span>
         </div>
 
         {/* Main Content */}

@@ -34,11 +34,11 @@ export default function Hero() {
             />
           </div>
           
-          {/* Tula Mascot */}
+          {/* Nandi Mascot */}
           <div className="relative">
             <Image
               src="/tula-mascot.png"
-              alt="Tula AI mascot working on computer"
+              alt="Nandi AI mascot working on computer"
               width={500}
               height={500}
               className="w-[500px] h-[500px] object-contain"
