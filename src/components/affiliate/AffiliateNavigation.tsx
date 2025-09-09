@@ -1,4 +1,4 @@
-export default function Navigation() {
+export default function AffiliateNavigation() {
   return (
     <nav className="flex items-center justify-between px-8 pt-4">
       <div className="flex items-center space-x-2">
@@ -9,14 +9,14 @@ export default function Navigation() {
       </div>
       
       <div className="hidden md:flex items-center space-x-8">
-        <a href="#features" className="text-lg text-gray-700 hover:text-black transition-colors">Features</a>
-        <a href="#personalize" className="text-lg text-gray-700 hover:text-black transition-colors">How it works</a>
-        <a href="/affiliate" className="text-lg text-gray-700 hover:text-black transition-colors">For Affiliates</a>
-        <a href="#contact" className="text-lg text-gray-700 hover:text-black transition-colors">Help</a>
+        <a href="#benefits" className="text-lg text-gray-700 hover:text-black transition-colors">Benefits</a>
+        <a href="#how-it-works" className="text-lg text-gray-700 hover:text-black transition-colors">How it works</a>
+        <a href="#pricing" className="text-lg text-gray-700 hover:text-black transition-colors">Pricing</a>
+        <a href="#contact" className="text-lg text-gray-700 hover:text-black transition-colors">Contact</a>
       </div>
       
       <a href="https://vikrambattalapalli.gumroad.com/l/nhsjky" target="_blank" rel="noopener noreferrer" className="bg-black text-white px-6 py-3 rounded-full font-medium text-lg hover:bg-gray-800 transition-colors">
-        Pledge
+        Get Early Access
       </a>
     </nav>
   );
