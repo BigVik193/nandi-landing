@@ -9,11 +9,13 @@ export default function Hero() {
           <h1 className="text-7xl lg:text-8xl xl:text-8xl font-medium text-black leading-tight font-title">
             Your
             <br />
-            always-
+            always-on
             <br />
-            on Shopify
+            Shopify
             <br />
-            growth engine
+            growth
+            <br />
+            engine
           </h1>
           
           <p className="text-xl text-gray-700 max-w-lg leading-relaxed">
