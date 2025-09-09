@@ -14,9 +14,9 @@ export default function Navigation() {
         <a href="#contact" className="text-lg text-gray-700 hover:text-black transition-colors">Help</a>
       </div>
       
-      <button className="bg-black text-white px-6 py-3 rounded-full font-medium text-lg hover:bg-gray-800 transition-colors">
+      <a href="https://vikrambattalapalli.gumroad.com/l/nhsjky" target="_blank" rel="noopener noreferrer" className="bg-black text-white px-6 py-3 rounded-full font-medium text-lg hover:bg-gray-800 transition-colors">
         Pledge
-      </button>
+      </a>
     </nav>
   );
 }

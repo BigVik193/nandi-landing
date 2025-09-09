@@ -102,9 +102,9 @@ export default function Subscription() {
               </div>
             </div>
             
-            <button className="w-full bg-purple-300 hover:bg-purple-400 text-black font-medium py-4 px-6 rounded-full text-lg transition-colors mt-auto">
+            <a href="https://vikrambattalapalli.gumroad.com/l/nhsjky" target="_blank" rel="noopener noreferrer" className="w-full bg-purple-300 hover:bg-purple-400 text-black font-medium py-4 px-6 rounded-full text-lg transition-colors mt-auto text-center inline-block">
               Pledge
-            </button>
+            </a>
           </div>
 
           {/* Pro Plan */}
@@ -202,9 +202,9 @@ export default function Subscription() {
               </div>
             </div>
             
-            <button className="w-full bg-purple-300 hover:bg-purple-400 text-black font-medium py-4 px-6 rounded-full text-lg transition-colors mt-auto">
+            <a href="https://vikrambattalapalli.gumroad.com/l/nhsjky" target="_blank" rel="noopener noreferrer" className="w-full bg-purple-300 hover:bg-purple-400 text-black font-medium py-4 px-6 rounded-full text-lg transition-colors mt-auto text-center inline-block">
               Pledge
-            </button>
+            </a>
           </div>
 
           {/* Scale Plan */}

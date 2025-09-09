@@ -11,9 +11,9 @@ export default function Hero() {
             <br />
             always-
             <br />
-            on growth
+            on Shopify
             <br />
-            engine
+            growth engine
           </h1>
           
           <p className="text-xl text-gray-700 max-w-lg leading-relaxed">
