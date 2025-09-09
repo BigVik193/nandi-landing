@@ -4,12 +4,12 @@ export default function AffiliateHow() {
       <div className="max-w-7xl mx-auto px-8">
         <div className="text-center mb-16">
           <h2 className="text-5xl lg:text-6xl font-medium text-black leading-tight font-title mb-6">
-            Set it up in minutes,
+            How it will work
             <br />
-            profit forever
+            when we launch
           </h2>
           <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-            No coding required. Works with any tracking system, any traffic source, any offer.
+            Simple setup, powerful results. We're building this to work with any tracking system, any traffic source, any offer.
           </p>
         </div>
 

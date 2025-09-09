@@ -5,10 +5,10 @@ export default function AffiliateContact() {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-5xl lg:text-6xl font-medium text-black leading-tight font-title mb-6">
-            Ready to 10x your campaigns?
+            Ready to join our early access?
           </h2>
           <p className="text-xl text-gray-600">
-            Let's talk about scaling your affiliate business with AI.
+            Have questions about our presale? Let's talk about how Nandi will transform your campaigns.
           </p>
         </div>
 
@@ -29,8 +29,8 @@ export default function AffiliateContact() {
               </div>
               <h3 className="text-2xl font-semibold text-black mb-2">Email</h3>
               <p className="text-lg text-gray-600 mb-2">Quick responses from our team.</p>
-              <a href="mailto:affiliates@gettula.com" className="text-lg text-black underline">
-                affiliates@gettula.com
+              <a href="mailto:hello@trynandi.com" className="text-lg text-black underline">
+                hello@trynandi.com
               </a>
             </div>
 
@@ -44,7 +44,7 @@ export default function AffiliateContact() {
               <h3 className="text-2xl font-semibold text-black mb-2">Chat</h3>
               <p className="text-lg text-gray-600 mb-2">Join our affiliate community.</p>
               <a href="https://t.me/nandiaffiliates" target="_blank" rel="noopener noreferrer" className="text-lg text-black underline">
-                Telegram Group
+                Discord Group
               </a>
             </div>
           </div>

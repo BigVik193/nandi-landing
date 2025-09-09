@@ -4,8 +4,11 @@ export default function AffiliateTestimonials() {
       <div className="max-w-7xl mx-auto px-8">
         <div className="text-center mb-16">
           <h2 className="text-5xl lg:text-6xl font-medium text-black leading-tight font-title">
-            Real results from real affiliates
+            Results our beta testers achieved
           </h2>
+          <p className="text-xl text-gray-600 mt-4">
+            Early feedback from affiliates testing our optimization engine
+          </p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
