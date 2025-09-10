@@ -32,45 +32,27 @@ export default function AffiliateHero() {
 
         {/* Right Side - Hero Graphic */}
         <div className="relative flex flex-col items-center justify-center">
-          {/* Traffic Sources Graphic */}
-          <div className="relative mb-4">
-            <div className="grid grid-cols-3 gap-2">
-              <div className="bg-white rounded-lg p-3 shadow-md flex items-center justify-center h-12">
-                <Image
-                  src="/Google_Ads_icon.png"
-                  alt="Google Ads"
-                  width={32}
-                  height={32}
-                  className="w-8 h-8 object-contain"
-                />
-              </div>
-              <div className="bg-white rounded-lg p-3 shadow-md flex items-center justify-center h-12">
-                <Image
-                  src="/TikTok-Logo-2016-present.png"
-                  alt="TikTok Ads"
-                  width={32}
-                  height={32}
-                  className="w-8 h-8 object-contain"
-                />
-              </div>
-              <div className="bg-white rounded-lg p-3 shadow-md flex items-center justify-center h-12">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-base">f</span>
-                </div>
-              </div>
-            </div>
+          {/* Logo Graphic */}
+          <div className="relative">
+            <Image
+              src="/affiliate-logo-graphic.png"
+              alt="Traffic Sources"
+              width={600}
+              height={300}
+              className="w-full max-w-md object-contain"
+            />
           </div>
           
           {/* Enhanced Conversion Rate Improvement Visual */}
-          <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-6 shadow-xl w-full max-w-sm border border-gray-100">
-            <div className="space-y-5">
+          <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-8 shadow-xl w-full max-w-lg border border-gray-100">
+            <div className="space-y-6">
               {/* Header */}
               <div className="text-center">
-                <div className="inline-flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1 mb-3">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium text-gray-700">Live Campaign Data</span>
+                <div className="inline-flex items-center space-x-2 bg-gray-100 rounded-full px-4 py-2 mb-4">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-base font-medium text-gray-700">Live Campaign Data</span>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Campaign Performance</h3>
+                <h3 className="text-xl font-semibold text-gray-800 mb-6">Campaign Performance</h3>
               </div>
 
               {/* Before/After Comparison */}
@@ -78,20 +60,20 @@ export default function AffiliateHero() {
                 <div className="flex items-center justify-between">
                   <div className="text-center flex-1">
                     <div className="relative">
-                      <p className="text-3xl font-bold text-red-500 mb-2 relative">
+                      <p className="text-4xl font-bold text-red-500 mb-3 relative">
                         2.3%
                         {/* <span className="absolute inset-0 border-b-2 border-red-400 transform rotate-12 translate-y-4"></span> */}
                       </p>
                     </div>
-                    <div className="bg-red-50 rounded-lg px-3 py-1">
-                      <p className="text-sm font-medium text-red-600">Before</p>
+                    <div className="bg-red-50 rounded-lg px-4 py-2">
+                      <p className="text-base font-medium text-red-600">Before</p>
                     </div>
                   </div>
                   
                   <div className="flex-shrink-0 mx-4">
                     <div className="relative">
-                      <div className="w-10 h-10 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                         </svg>
                       </div>
@@ -100,24 +82,24 @@ export default function AffiliateHero() {
                   </div>
                   
                   <div className="text-center flex-1">
-                    <p className="text-3xl font-bold text-green-600 mb-2">18.7%</p>
-                    <div className="bg-green-50 rounded-lg px-3 py-1">
-                      <p className="text-sm font-medium text-green-600">After Nandi</p>
+                    <p className="text-4xl font-bold text-green-600 mb-3">18.7%</p>
+                    <div className="bg-green-50 rounded-lg px-4 py-2">
+                      <p className="text-base font-medium text-green-600">After Nandi</p>
                     </div>
                   </div>
                 </div>
               </div>
               
               {/* ROI Increase */}
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-100">
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-5 border border-green-100">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-700 font-medium text-sm">ROI Increase</span>
+                  <span className="text-gray-700 font-medium text-base">ROI Increase</span>
                   <div className="flex items-center space-x-2">
                     <div className="flex items-center">
-                      <svg className="w-4 h-4 text-green-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                       </svg>
-                      <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">+713%</span>
+                      <span className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">+713%</span>
                     </div>
                   </div>
                 </div>
