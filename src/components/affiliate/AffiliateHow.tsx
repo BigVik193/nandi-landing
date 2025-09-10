@@ -1,6 +1,6 @@
 export default function AffiliateHow() {
   return (
-    <section id="how-it-works" className="bg-pricing py-20">
+    <section id="how-it-works" className="bg-section py-20">
       <div className="max-w-7xl mx-auto px-8">
         <div className="text-center mb-16">
           <h2 className="text-5xl lg:text-6xl font-medium text-black leading-tight font-title mb-6">
@@ -16,7 +16,7 @@ export default function AffiliateHow() {
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Step 1 */}
           <div className="relative">
-            <div className="bg-white rounded-2xl p-6 shadow-lg h-full">
+            <div className="bg-section rounded-2xl p-6 border-2 border-black shadow-lg h-full">
               <div className="absolute -top-4 -left-4 w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-bold text-xl">
                 1
               </div>
@@ -27,7 +27,7 @@ export default function AffiliateHow() {
                 </p>
               </div>
             </div>
-            <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2">
+            <div className="hidden lg:block absolute top-1/2 -right-8 transform -translate-y-1/2">
               <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
@@ -36,7 +36,7 @@ export default function AffiliateHow() {
 
           {/* Step 2 */}
           <div className="relative">
-            <div className="bg-white rounded-2xl p-6 shadow-lg h-full">
+            <div className="bg-section rounded-2xl p-6 border-2 border-black shadow-lg h-full">
               <div className="absolute -top-4 -left-4 w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-bold text-xl">
                 2
               </div>
@@ -47,7 +47,7 @@ export default function AffiliateHow() {
                 </p>
               </div>
             </div>
-            <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2">
+            <div className="hidden lg:block absolute top-1/2 -right-8 transform -translate-y-1/2">
               <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
@@ -56,7 +56,7 @@ export default function AffiliateHow() {
 
           {/* Step 3 */}
           <div className="relative">
-            <div className="bg-white rounded-2xl p-6 shadow-lg h-full">
+            <div className="bg-section rounded-2xl p-6 border-2 border-black shadow-lg h-full">
               <div className="absolute -top-4 -left-4 w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-bold text-xl">
                 3
               </div>
@@ -67,7 +67,7 @@ export default function AffiliateHow() {
                 </p>
               </div>
             </div>
-            <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2">
+            <div className="hidden lg:block absolute top-1/2 -right-8 transform -translate-y-1/2">
               <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
@@ -76,7 +76,7 @@ export default function AffiliateHow() {
 
           {/* Step 4 */}
           <div className="relative">
-            <div className="bg-white rounded-2xl p-6 shadow-lg h-full">
+            <div className="bg-section rounded-2xl p-6 border-2 border-black shadow-lg h-full">
               <div className="absolute -top-4 -left-4 w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-xl">
                 ✓
               </div>

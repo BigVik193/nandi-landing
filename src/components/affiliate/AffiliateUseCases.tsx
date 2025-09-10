@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export default function AffiliateUseCases() {
   return (
-    <section className="bg-pricing py-20">
+    <section className="bg-section py-20">
       <div className="max-w-7xl mx-auto px-8">
         <div className="text-center mb-16">
           <h2 className="text-5xl lg:text-6xl font-medium text-black leading-tight font-title mb-6">
@@ -15,7 +15,7 @@ export default function AffiliateUseCases() {
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* E-commerce/Dropshipping */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-section rounded-2xl p-8 border-2 border-black shadow-lg">
             <div className="flex items-start space-x-6">
               <div className="w-16 h-16 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -37,7 +37,7 @@ export default function AffiliateUseCases() {
           </div>
 
           {/* Lead Generation */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-section rounded-2xl p-8 border-2 border-black shadow-lg">
             <div className="flex items-start space-x-6">
               <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,7 +59,7 @@ export default function AffiliateUseCases() {
           </div>
 
           {/* Dating & Social */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-section rounded-2xl p-8 border-2 border-black shadow-lg">
             <div className="flex items-start space-x-6">
               <div className="w-16 h-16 bg-pink-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <svg className="w-8 h-8 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,7 +81,7 @@ export default function AffiliateUseCases() {
           </div>
 
           {/* Crypto & Finance */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-section rounded-2xl p-8 border-2 border-black shadow-lg">
             <div className="flex items-start space-x-6">
               <div className="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,7 +103,7 @@ export default function AffiliateUseCases() {
           </div>
 
           {/* Sweepstakes */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-section rounded-2xl p-8 border-2 border-black shadow-lg">
             <div className="flex items-start space-x-6">
               <div className="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,7 +125,7 @@ export default function AffiliateUseCases() {
           </div>
 
           {/* Nutra & Health */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-section rounded-2xl p-8 border-2 border-black shadow-lg">
             <div className="flex items-start space-x-6">
               <div className="w-16 h-16 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

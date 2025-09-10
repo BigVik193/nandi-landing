@@ -1,6 +1,6 @@
 export default function AffiliatePricing() {
   return (
-    <section id="pricing" className="bg-section py-20">
+    <section id="pricing" className="bg-pricing py-20">
       <div className="max-w-7xl mx-auto px-8">
         {/* Header */}
         <div className="text-center mb-16">

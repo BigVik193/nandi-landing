@@ -13,7 +13,7 @@ export default function AffiliateBenefits() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Benefit 1 */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-section rounded-2xl p-8 border-2 border-black shadow-lg">
             <div className="w-14 h-14 bg-purple-300 rounded-full flex items-center justify-center mb-6">
               <svg className="w-7 h-7 text-purple-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -26,7 +26,7 @@ export default function AffiliateBenefits() {
           </div>
 
           {/* Benefit 2 */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-section rounded-2xl p-8 border-2 border-black shadow-lg">
             <div className="w-14 h-14 bg-purple-300 rounded-full flex items-center justify-center mb-6">
               <svg className="w-7 h-7 text-purple-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -39,7 +39,7 @@ export default function AffiliateBenefits() {
           </div>
 
           {/* Benefit 3 */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-section rounded-2xl p-8 border-2 border-black shadow-lg">
             <div className="w-14 h-14 bg-purple-300 rounded-full flex items-center justify-center mb-6">
               <svg className="w-7 h-7 text-purple-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -52,7 +52,7 @@ export default function AffiliateBenefits() {
           </div>
 
           {/* Benefit 4 */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-section rounded-2xl p-8 border-2 border-black shadow-lg">
             <div className="w-14 h-14 bg-purple-300 rounded-full flex items-center justify-center mb-6">
               <svg className="w-7 h-7 text-purple-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
@@ -65,7 +65,7 @@ export default function AffiliateBenefits() {
           </div>
 
           {/* Benefit 5 */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-section rounded-2xl p-8 border-2 border-black shadow-lg">
             <div className="w-14 h-14 bg-purple-300 rounded-full flex items-center justify-center mb-6">
               <svg className="w-7 h-7 text-purple-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -78,7 +78,7 @@ export default function AffiliateBenefits() {
           </div>
 
           {/* Benefit 6 */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-section rounded-2xl p-8 border-2 border-black shadow-lg">
             <div className="w-14 h-14 bg-purple-300 rounded-full flex items-center justify-center mb-6">
               <svg className="w-7 h-7 text-purple-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
