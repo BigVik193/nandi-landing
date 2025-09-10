@@ -15,11 +15,11 @@ const figtree = Figtree({
 
 export const metadata: Metadata = {
   title: {
-    default: "Nandi AI - Shopify Store Optimization & Conversion Rate Automation",
-    template: "%s | Nandi AI - Shopify Growth Engine",
+    default: "Nandi AI - E-commerce Store Optimization & Conversion Rate Automation",
+    template: "%s | Nandi AI - E-commerce Growth Engine",
   },
-  description: "Boost Shopify sales with AI-powered conversion optimization. Automated A/B testing, real-time store improvements, and seamless integration. Perfect for merch stores, custom goods, and apparel brands.",
-  keywords: ["Shopify optimization", "conversion rate optimization", "Shopify AI tools", "ecommerce automation", "Shopify store growth", "sales optimization", "AI marketing automation", "automated testing"],
+  description: "Boost online store sales with AI-powered conversion optimization. Automated A/B testing, real-time store improvements, and seamless integration. Perfect for merch stores, custom goods, and apparel brands.",
+  keywords: ["e-commerce optimization", "conversion rate optimization", "online store AI tools", "ecommerce automation", "e-commerce store growth", "sales optimization", "AI marketing automation", "automated testing"],
   authors: [{ name: "Nandi Team" }],
   creator: "Nandi Team",
   publisher: "Nandi Team",
@@ -29,15 +29,15 @@ export const metadata: Metadata = {
     telephone: false,
   },
   openGraph: {
-    title: "Nandi AI - Automated Shopify Store Optimization & Growth",
-    description: "AI-powered conversion optimization for Shopify stores. Boost sales with automated A/B testing, real-time improvements, and seamless integration.",
+    title: "Nandi AI - Automated E-commerce Store Optimization & Growth",
+    description: "AI-powered conversion optimization for online stores. Boost sales with automated A/B testing, real-time improvements, and seamless integration.",
     siteName: "Nandi AI",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Nandi AI - Shopify Store Optimization Platform",
+        alt: "Nandi AI - E-commerce Store Optimization Platform",
       },
     ],
     locale: "en_US",
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nandi AI - Automated Shopify Growth Engine", 
-    description: "AI-powered conversion optimization for Shopify stores. Boost sales automatically.",
+    title: "Nandi AI - Automated E-commerce Growth Engine", 
+    description: "AI-powered conversion optimization for online stores. Boost sales automatically.",
     images: ["/twitter-image.png"],
   },
   robots: {

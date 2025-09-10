@@ -79,7 +79,7 @@ export default function Subscription() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-gray-700">Seamless Shopify integration</span>
+                  <span className="text-gray-700">Seamless e-commerce integration</span>
                 </div>
                 
                 <div className="flex items-start space-x-3">
@@ -103,7 +103,7 @@ export default function Subscription() {
             </div>
             
             <a href="https://vikrambattalapalli.gumroad.com/l/nhsjky" target="_blank" rel="noopener noreferrer" className="w-full bg-purple-300 hover:bg-purple-400 text-black font-medium py-4 px-6 rounded-full text-lg transition-colors mt-auto text-center inline-block">
-              Pledge
+              Get Early Access
             </a>
           </div>
 
@@ -203,7 +203,7 @@ export default function Subscription() {
             </div>
             
             <a href="https://vikrambattalapalli.gumroad.com/l/nhsjky" target="_blank" rel="noopener noreferrer" className="w-full bg-purple-300 hover:bg-purple-400 text-black font-medium py-4 px-6 rounded-full text-lg transition-colors mt-auto text-center inline-block">
-              Pledge
+              Get Early Access
             </a>
           </div>
 
@@ -225,7 +225,7 @@ export default function Subscription() {
             {/* Description Section - Fixed Height */}
             <div className="h-16 mb-4 flex items-start">
               <p className="text-lg text-gray-700">
-                White-glove service for high-volume Shopify stores.
+                White-glove service for high-volume online stores.
               </p>
             </div>
 

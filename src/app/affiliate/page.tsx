@@ -20,7 +20,7 @@ export default function AffiliatePage() {
       <AffiliateStats />
       <AffiliateHow />
       <AffiliatePricing />
-      <AffiliateTestimonials />
+      {/* <AffiliateTestimonials /> */}
       <AffiliateContact />
       <AffiliateFAQ />
       <Footer />

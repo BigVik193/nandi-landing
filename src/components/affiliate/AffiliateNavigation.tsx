@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function AffiliateNavigation() {
   return (
-    <nav className="flex items-center justify-between px-8 pt-4">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-3 bg-hero">
       <Link href="/affiliate" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
         <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
           <div className="w-4 h-4 bg-white transform rotate-45"></div>
@@ -10,16 +10,27 @@ export default function AffiliateNavigation() {
         <span className="text-2xl font-bold text-black">Nandi</span>
       </Link>
       
-      <div className="hidden md:flex items-center space-x-8">
+      <div className="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
         <a href="#benefits" className="text-lg text-gray-700 hover:text-black transition-colors">Benefits</a>
         <a href="#how-it-works" className="text-lg text-gray-700 hover:text-black transition-colors">How it works</a>
         <a href="#pricing" className="text-lg text-gray-700 hover:text-black transition-colors">Pricing</a>
         <a href="#contact" className="text-lg text-gray-700 hover:text-black transition-colors">Contact</a>
       </div>
       
-      <a href="https://vikrambattalapalli.gumroad.com/l/nhsjky" target="_blank" rel="noopener noreferrer" className="bg-black text-white px-6 py-3 rounded-full font-medium text-lg hover:bg-gray-800 transition-colors">
-        Early Access - $100
-      </a>
+      <div className="flex items-center space-x-4">
+        <a 
+          href="https://discord.gg/jDrzsFRV" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="bg-[#5865F2] text-white px-6 py-3 rounded-full font-medium text-lg hover:bg-[#4752C4] transition-colors flex items-center space-x-2"
+        >
+          <img src="/discord-logo.png" alt="Discord" className="w-5 h-5" />
+          <span>Join Discord</span>
+        </a>
+        <a href="https://vikrambattalapalli.gumroad.com/l/sjjmhx" target="_blank" rel="noopener noreferrer" className="bg-black text-white px-6 py-3 rounded-full font-medium text-lg hover:bg-gray-800 transition-colors">
+          Get Early Access
+        </a>
+      </div>
     </nav>
   );
 }

@@ -43,8 +43,8 @@ export default function AffiliateContact() {
               </div>
               <h3 className="text-2xl font-semibold text-black mb-2">Chat</h3>
               <p className="text-lg text-gray-600 mb-2">Join our affiliate community.</p>
-              <a href="https://t.me/nandiaffiliates" target="_blank" rel="noopener noreferrer" className="text-lg text-black underline">
-                Discord Group
+              <a href="https://discord.gg/jDrzsFRV" target="_blank" rel="noopener noreferrer" className="text-lg text-black underline">
+                Join Discord
               </a>
             </div>
           </div>

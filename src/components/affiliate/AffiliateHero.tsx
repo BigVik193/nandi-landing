@@ -2,39 +2,29 @@ import Image from 'next/image';
 
 export default function AffiliateHero() {
   return (
-    <main className="max-w-7xl mx-auto px-8 py-8">
-      <div className="grid lg:grid-cols-2 gap-6 items-center min-h-[90vh]">
+    <main className="h-screen flex items-center">
+      <div className="max-w-7xl mx-auto px-8 w-full mt-20">
+        <div className="grid lg:grid-cols-2 gap-6 items-center">
         {/* Left Side - Text Content */}
-        <div className="space-y-4">
-          <h1 className="text-5xl lg:text-6xl xl:text-7xl font-medium text-black leading-tight font-title">
-            Stop
-            <br />
-            leaving
+        <div className="space-y-8">
+          <h1 className="text-6xl lg:text-7xl xl:text-8xl font-medium text-black leading-tight font-title">
+            Stop leaving
             <br />
             money on
             <br />
             the table
           </h1>
           
-          <p className="text-base text-gray-700 max-w-lg leading-relaxed">
+          <p className="text-lg text-gray-700 max-w-lg leading-relaxed">
             Turn your 2% campaigns into 20% winners. Our AI optimizes your pages in real-time so you can focus on scaling.
           </p>
 
-          <div className="bg-orange-100 border border-orange-300 rounded-lg p-3 max-w-lg">
-            <div className="flex items-center space-x-2 mb-1">
-              <span className="text-xl">🚀</span>
-              <span className="font-bold text-orange-800 text-sm">Early Access - 50% Off Forever</span>
-            </div>
-            <p className="text-orange-700 text-sm leading-tight">
-              Join our founding affiliates. Help us build the perfect optimization tool.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-4">
-            <a href="https://vikrambattalapalli.gumroad.com/l/nhsjky" target="_blank" rel="noopener noreferrer" className="bg-black text-white px-10 py-5 rounded-full font-bold text-xl hover:bg-gray-800 transition-colors">
-              Get Early Access - $100
+            
+          <div className="flex flex-col sm:flex-row gap-4">
+            <a href="https://vikrambattalapalli.gumroad.com/l/sjjmhx" target="_blank" rel="noopener noreferrer" className="bg-black text-white px-8 py-4 rounded-full font-medium text-lg hover:bg-gray-800 transition-colors text-center ring-4 ring-orange-300 ring-offset-2">
+              Get Early Access - 50% Off Forever
             </a>
-            <a href="#how-it-works" className="bg-white text-black border-2 border-black px-10 py-5 rounded-full font-bold text-xl hover:bg-gray-100 transition-colors">
+            <a href="#how-it-works" className="border-2 border-black text-black px-8 py-4 rounded-full font-medium text-lg hover:bg-black hover:text-white transition-colors text-center">
               See How It Works
             </a>
           </div>
@@ -136,6 +126,7 @@ export default function AffiliateHero() {
           </div>
         </div>
       </div>
+    </div>
     </main>
   );
 }
