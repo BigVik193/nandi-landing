@@ -6,7 +6,8 @@
       "WebSearch",
       "mcp__context7__resolve-library-id",
       "mcp__context7__get-library-docs",
-      "Bash(npx next:*)"
+      "Bash(npx next:*)",
+      "Bash(pnpm add:*)"
     ],
     "deny": [],
     "ask": []

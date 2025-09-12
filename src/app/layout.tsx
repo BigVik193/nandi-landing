@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Figtree } from "next/font/google";
 import Script from "next/script";
+import { Analytics } from '@vercel/analytics/next';
 import "./globals.css";
 
 const bricolageGrotesque = Bricolage_Grotesque({
@@ -78,6 +79,7 @@ export default function RootLayout({
         className={`${bricolageGrotesque.variable} ${figtree.variable} antialiased`}
       >
         {children}
+        <Analytics />
         <Script 
           src="https://assets.calendly.com/assets/external/widget.js" 
           strategy="afterInteractive"

@@ -2,12 +2,12 @@ import Image from 'next/image';
 
 export default function AffiliateHero() {
   return (
-    <main className="h-screen flex items-center">
-      <div className="max-w-7xl mx-auto px-8 w-full mt-20">
-        <div className="grid lg:grid-cols-2 gap-6 items-center">
+    <main className="min-h-screen flex items-center pt-24 pb-20 sm:pt-20 sm:pb-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 w-full">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-6 items-center">
         {/* Left Side - Text Content */}
-        <div className="space-y-8">
-          <h1 className="text-6xl lg:text-7xl xl:text-8xl font-medium text-black leading-tight font-title">
+        <div className="space-y-6 sm:space-y-8 text-center lg:text-left">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-medium text-black leading-tight font-title">
             Stop leaving
             <br />
             money on
@@ -20,7 +20,7 @@ export default function AffiliateHero() {
           </p>
 
             
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <a href="https://vikrambattalapalli.gumroad.com/l/sjjmhx" target="_blank" rel="noopener noreferrer" className="bg-black text-white px-8 py-4 rounded-full font-medium text-lg hover:bg-gray-800 transition-colors text-center ring-4 ring-orange-300 ring-offset-2">
               Get Early Access - 50% Off Forever
             </a>
@@ -31,7 +31,7 @@ export default function AffiliateHero() {
         </div>
 
         {/* Right Side - Hero Graphic */}
-        <div className="relative flex flex-col items-center justify-center">
+        <div className="relative flex flex-col items-center justify-center space-y-6">
           {/* Logo Graphic */}
           <div className="relative">
             <Image
@@ -39,12 +39,12 @@ export default function AffiliateHero() {
               alt="Traffic Sources"
               width={600}
               height={300}
-              className="w-full max-w-md object-contain"
+              className="w-full max-w-xs sm:max-w-md object-contain"
             />
           </div>
           
           {/* Enhanced Conversion Rate Improvement Visual */}
-          <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-8 shadow-xl w-full max-w-lg border border-gray-100">
+          <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-4 sm:p-6 lg:p-8 shadow-xl w-full max-w-sm sm:max-w-lg border border-gray-100">
             <div className="space-y-6">
               {/* Header */}
               <div className="text-center">
@@ -52,7 +52,7 @@ export default function AffiliateHero() {
                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="text-base font-medium text-gray-700">Live Campaign Data</span>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-6">Campaign Performance</h3>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-6">Campaign Performance</h3>
               </div>
 
               {/* Before/After Comparison */}
@@ -60,7 +60,7 @@ export default function AffiliateHero() {
                 <div className="flex items-center justify-between">
                   <div className="text-center flex-1">
                     <div className="relative">
-                      <p className="text-4xl font-bold text-red-500 mb-3 relative">
+                      <p className="text-3xl sm:text-4xl font-bold text-red-500 mb-3 relative">
                         2.3%
                         {/* <span className="absolute inset-0 border-b-2 border-red-400 transform rotate-12 translate-y-4"></span> */}
                       </p>
@@ -82,7 +82,7 @@ export default function AffiliateHero() {
                   </div>
                   
                   <div className="text-center flex-1">
-                    <p className="text-4xl font-bold text-green-600 mb-3">18.7%</p>
+                    <p className="text-3xl sm:text-4xl font-bold text-green-600 mb-3">18.7%</p>
                     <div className="bg-green-50 rounded-lg px-4 py-2">
                       <p className="text-base font-medium text-green-600">After Nandi</p>
                     </div>
@@ -99,7 +99,7 @@ export default function AffiliateHero() {
                       <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                       </svg>
-                      <span className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">+713%</span>
+                      <span className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">+713%</span>
                     </div>
                   </div>
                 </div>
