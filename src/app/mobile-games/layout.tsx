@@ -1,26 +1,26 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Nandi AI for Mobile Games - Maximize Downloads & Revenue Automatically",
-  description: "AI-powered app store optimization for mobile game developers. Boost downloads and player engagement with automated A/B testing, icon optimization, and screenshot testing. Perfect for indie developers and game studios.",
-  keywords: ["mobile game optimization", "ASO optimization", "app store optimization", "mobile game AI tools", "game marketing automation", "icon A/B testing", "screenshot optimization", "mobile game growth"],
+  title: "Nandi AI for Mobile Games - Maximize Revenue Per Player with AI-Powered IAP Optimization",
+  description: "AI-powered in-game monetization platform for mobile game developers. Boost ARPU and conversions with automated IAP testing, in-game store optimization, and dynamic pricing. Perfect for indie developers and game studios.",
+  keywords: ["mobile game monetization", "in-app purchase optimization", "IAP testing", "in-game store optimization", "mobile game revenue optimization", "ARPU optimization", "game monetization AI", "automated IAP testing", "mobile game conversion optimization"],
   openGraph: {
-    title: "Nandi AI for Mobile Games - Automated ASO & Growth",
-    description: "Maximize your mobile game downloads with AI-powered app store optimization. Automated testing, real-time improvements, and higher conversion rates.",
+    title: "Nandi AI for Mobile Games - AI-Powered In-Game Monetization Platform",
+    description: "Maximize revenue per player with AI-powered in-app purchase optimization. Automated testing of IAP offers, pricing, and in-game store layouts to boost ARPU without app updates.",
     images: [
       {
-        url: "/og-image-mobile-games.png",
+        url: "/mobile-games/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Nandi AI - Mobile Game Growth Platform",
+        alt: "Nandi AI - Mobile Game Monetization Platform",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nandi AI for Mobile Games - Boost Downloads Automatically", 
-    description: "AI-powered app store optimization for mobile game developers. Maximize downloads and revenue automatically.",
-    images: ["/twitter-image-mobile-games.png"],
+    title: "Nandi AI for Mobile Games - Boost ARPU with AI-Powered IAP Optimization", 
+    description: "AI-powered in-game monetization platform. Maximize revenue per player with automated IAP testing and in-game store optimization.",
+    images: ["/mobile-games/twitter-image.png"],
   },
 };
 
