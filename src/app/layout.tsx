@@ -15,6 +15,7 @@ const figtree = Figtree({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://trynandi.com'),
   title: {
     default: "Nandi AI - E-commerce Store Optimization & Conversion Rate Automation",
     template: "%s | Nandi AI - E-commerce Growth Engine",

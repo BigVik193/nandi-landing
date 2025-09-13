@@ -12,6 +12,7 @@ import MobileGamesContact from '@/components/mobile-games/MobileGamesContact';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://trynandi.com'),
   title: "Mobile Game Monetization - AI-Powered IAP & In-Game Store Optimization",
   description: "Maximize revenue per player with AI-powered in-app purchase optimization. Automated testing of IAP offers, pricing, and in-game store layouts to boost ARPU and conversions without app updates.",
   keywords: [

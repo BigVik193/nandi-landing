@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://trynandi.com'),
   title: "Nandi AI for Affiliate Marketers - Maximize Campaign ROI Automatically",
   description: "AI-powered landing page optimization for affiliate marketers. Boost conversions on every campaign with automated A/B testing, real-time optimization, and multi-offer testing. Perfect for affiliates running paid traffic.",
   keywords: ["affiliate marketing optimization", "landing page optimization", "conversion rate optimization", "affiliate AI tools", "campaign optimization", "split testing", "A/B testing", "affiliate marketing automation"],
