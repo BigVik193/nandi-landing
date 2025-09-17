@@ -76,6 +76,25 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Google Analytics (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17577910658"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="gtag-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-17577910658');
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${bricolageGrotesque.variable} ${figtree.variable} antialiased`}
       >
@@ -83,6 +102,10 @@ export default function RootLayout({
         <Analytics />
         <Script 
           src="https://assets.calendly.com/assets/external/widget.js" 
+          strategy="afterInteractive"
+        />
+        <Script 
+          src="https://rust.referzone.io/235.js" 
           strategy="afterInteractive"
         />
       </body>

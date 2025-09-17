@@ -31,10 +31,10 @@ export default function AffiliateStats() {
       animateCountUp(testsElement as HTMLElement, 0, 500, 2000);
     }
 
-    // Animate ROI increase
-    const roiElement = document.querySelector('[data-count="312"]');
-    if (roiElement) {
-      animateCountUpWithPercent(roiElement as HTMLElement, 0, 312, 2500);
+    // Animate count down for sales needed (50 to 1)
+    const salesElement = document.querySelector('[data-count-down="50"]');
+    if (salesElement) {
+      animateCountDown(salesElement as HTMLElement, 50, 1, 2000);
     }
 
     // Animate hours saved
@@ -59,13 +59,13 @@ export default function AffiliateStats() {
     requestAnimationFrame(animate);
   };
 
-  const animateCountUpWithPercent = (element: HTMLElement, start: number, end: number, duration: number) => {
+  const animateCountDown = (element: HTMLElement, start: number, end: number, duration: number) => {
     const startTime = performance.now();
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const current = Math.floor(start + (end - start) * easeOutQuart(progress));
-      element.innerHTML = `${current}<span class="text-4xl lg:text-5xl">%</span>`;
+      const current = Math.floor(start - (start - end) * easeOutQuart(progress));
+      element.textContent = current.toString();
       
       if (progress < 1) {
         requestAnimationFrame(animate);
@@ -95,11 +95,9 @@ export default function AffiliateStats() {
           </div>
           
           <div className="space-y-2">
-            <div className="text-8xl lg:text-9xl font-bold text-black font-title" data-count="312">
-              0<span className="text-4xl lg:text-5xl">%</span>
-            </div>
-            <p className="text-xl text-black font-medium">Average ROI increase</p>
-            <p className="text-sm text-gray-600">in first 30 days</p>
+            <div className="text-8xl lg:text-9xl font-bold text-black font-title" data-count-down="50" data-target="1">50</div>
+            <p className="text-xl text-black font-medium">Sale to pay for itself</p>
+            <p className="text-sm text-gray-600">Based on $90 average order value</p>
           </div>
           
           <div className="space-y-2">
