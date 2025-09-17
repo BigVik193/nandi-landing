@@ -68,8 +68,7 @@ export default function MobileGamesLayout({
                 
                 if (isPurchase) {
                   // Send purchase event for external Gumroad links
-                  gtag('event', 'Purchase', {
-                      'transaction_id': 'mobile-games-' + Date.now(),
+                  gtag('event', 'purchase', {
                       'value': 1.0,
                       'currency': 'USD',
                       'items': [{
