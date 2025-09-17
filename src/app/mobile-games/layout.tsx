@@ -66,40 +66,44 @@ export default function MobileGamesLayout({
                   }
                 };
                 
-                if (isPurchase) {
-                  // Send purchase event for external Gumroad links
-                  gtag('event', 'purchase', {
-                      'value': 1.0,
-                      'currency': 'USD',
-                      'items': [{
-                        'item_id': 'nandi-mobile-games-early-access',
-                        'item_name': 'Nandi Mobile Games Early Access',
-                        'category': 'Software',
-                        'quantity': 1,
-                        'price': 1.0
-                      }]
-                  });
-                } else {
-                  // Send add_to_cart event for internal navigation to pricing
-                  gtag('event', 'add_to_cart', {
-                      'currency': 'USD',
-                      'value': 1.0,
-                      'items': [{
-                        'item_id': 'nandi-mobile-games-early-access',
-                        'item_name': 'Nandi Mobile Games Early Access',
-                        'category': 'Software',
-                        'quantity': 1,
-                        'price': 1.0
-                      }]
-                  });
-                }
-                
+                // Send the Google Ads conversion event first
                 gtag('event', 'conversion', {
                     'send_to': 'AW-17577910658/E4TcCKTE-5wbEILD5r1B',
                     'value': 1.0,
                     'currency': 'USD',
                     'event_callback': callback
                 });
+                
+                // Then send the analytics event after a small delay
+                setTimeout(function() {
+                  if (isPurchase) {
+                    // Send purchase event for external Gumroad links
+                    gtag('event', 'purchase', {
+                        'value': 1.0,
+                        'currency': 'USD',
+                        'items': [{
+                          'item_id': 'nandi-mobile-games-early-access',
+                          'item_name': 'Nandi Mobile Games Early Access',
+                          'category': 'Software',
+                          'quantity': 1,
+                          'price': 1.0
+                        }]
+                    });
+                  } else {
+                    // Send add_to_cart event for internal navigation to pricing
+                    gtag('event', 'add_to_cart', {
+                        'currency': 'USD',
+                        'value': 1.0,
+                        'items': [{
+                          'item_id': 'nandi-mobile-games-early-access',
+                          'item_name': 'Nandi Mobile Games Early Access',
+                          'category': 'Software',
+                          'quantity': 1,
+                          'price': 1.0
+                        }]
+                    });
+                  }
+                }, 100);
                 
                 console.log('📊 ' + (isPurchase ? 'Purchase' : 'Add to cart') + ' and conversion events sent');
                 return false;
