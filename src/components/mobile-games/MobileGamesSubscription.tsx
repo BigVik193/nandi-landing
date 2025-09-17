@@ -5,9 +5,7 @@ export default function Subscription() {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-6xl lg:text-7xl font-medium text-black leading-tight font-title mb-6">
-            Revenue-share
-            <br />
-            pricing
+            Revenue-share pricing
           </h2>
           <p className="text-xl text-gray-600">
             Pay only when we help you earn more — no upfront cost, no risk.
@@ -30,11 +28,18 @@ export default function Subscription() {
               <h3 className="text-4xl font-bold text-black">Starter</h3>
               <div className="text-right">
                 <div className="flex flex-col items-end">
-                  <div className="text-lg text-gray-500 line-through">15%</div>
-                  <div className="text-4xl font-bold text-black">7.5<span className="text-2xl text-gray-600">%</span></div>
+                  <div className="text-lg text-gray-500 line-through">10%</div>
+                  <div className="text-4xl font-bold text-black">5<span className="text-2xl text-gray-600">%</span></div>
                   <div className="text-sm text-gray-500">per conversion</div>
                 </div>
               </div>
+            </div>
+            
+            {/* CTA Button - Top Position */}
+            <div className="mb-6">
+              <a href="https://vikrambattalapalli.gumroad.com/l/awfvm" target="_blank" rel="noopener noreferrer" className="w-full bg-purple-300 hover:bg-purple-400 text-black font-medium py-4 px-6 rounded-full text-lg transition-colors text-center inline-block">
+                Get Early Access
+              </a>
             </div>
             
             {/* Description Section - Fixed Height */}
@@ -44,7 +49,7 @@ export default function Subscription() {
               </p>
             </div>
 
-            <div className="border-t border-stone-200 pt-8 mb-8 flex-grow">
+            <div className="border-t border-stone-200 pt-8 mb-8">
               <div className="grid grid-cols-1 gap-4">
                 <div className="flex items-start space-x-3">
                   <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -93,9 +98,6 @@ export default function Subscription() {
               </div>
             </div>
             
-            <a href="https://vikrambattalapalli.gumroad.com/l/awfvm" target="_blank" rel="noopener noreferrer" className="w-full bg-purple-300 hover:bg-purple-400 text-black font-medium py-4 px-6 rounded-full text-lg transition-colors mt-auto text-center inline-block">
-              Get Early Access
-            </a>
           </div>
 
           {/* Studio Plan */}
@@ -112,11 +114,18 @@ export default function Subscription() {
               <h3 className="text-4xl font-bold text-black">Pro</h3>
               <div className="text-right">
                 <div className="flex flex-col items-end">
-                  <div className="text-lg text-gray-500 line-through">10%</div>
-                  <div className="text-4xl font-bold text-black">5<span className="text-2xl text-gray-600">%</span></div>
+                  <div className="text-lg text-gray-500 line-through">5%</div>
+                  <div className="text-4xl font-bold text-black">2.5<span className="text-2xl text-gray-600">%</span></div>
                   <div className="text-sm text-gray-500">per conversion</div>
                 </div>
               </div>
+            </div>
+            
+            {/* CTA Button - Top Position */}
+            <div className="mb-6">
+              <a href="https://vikrambattalapalli.gumroad.com/l/awfvm" target="_blank" rel="noopener noreferrer" className="w-full bg-purple-300 hover:bg-purple-400 text-black font-medium py-4 px-6 rounded-full text-lg transition-colors text-center inline-block">
+                Get Early Access
+              </a>
             </div>
             
             {/* Description Section - Fixed Height */}
@@ -126,7 +135,7 @@ export default function Subscription() {
               </p>
             </div>
 
-            <div className="border-t border-stone-200 pt-8 mb-8 flex-grow">
+            <div className="border-t border-stone-200 pt-8 mb-8">
               <div className="grid grid-cols-1 gap-4">
                 <div className="flex items-start space-x-3">
                   <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -184,9 +193,6 @@ export default function Subscription() {
               </div>
             </div>
             
-            <a href="https://vikrambattalapalli.gumroad.com/l/awfvm" target="_blank" rel="noopener noreferrer" className="w-full bg-purple-300 hover:bg-purple-400 text-black font-medium py-4 px-6 rounded-full text-lg transition-colors mt-auto text-center inline-block">
-              Get Early Access
-            </a>
           </div>
 
           {/* Publisher Plan */}
@@ -204,6 +210,13 @@ export default function Subscription() {
               </div>
             </div>
             
+            {/* CTA Button - Top Position */}
+            <div className="mb-6">
+              <a href="#contact" className="w-full bg-black hover:bg-gray-800 text-white font-medium py-4 px-6 rounded-full text-lg transition-colors text-center inline-block">
+                Contact us
+              </a>
+            </div>
+            
             {/* Description Section - Fixed Height */}
             <div className="h-16 mb-4 flex items-start">
               <p className="text-lg text-gray-700">
@@ -211,7 +224,7 @@ export default function Subscription() {
               </p>
             </div>
 
-            <div className="border-t border-stone-200 pt-8 mb-8 flex-grow">
+            <div className="border-t border-stone-200 pt-8 mb-8">
               <div className="grid grid-cols-1 gap-4">
                 <div className="flex items-start space-x-3">
                   <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -278,9 +291,6 @@ export default function Subscription() {
               </div>
             </div>
             
-            <a href="#contact" className="w-full bg-black hover:bg-gray-800 text-white font-medium py-4 px-6 rounded-full text-lg transition-colors mt-auto text-center inline-block">
-              Contact us
-            </a>
           </div>
         </div>
       </div>

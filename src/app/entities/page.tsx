@@ -13,10 +13,14 @@ export default function EntitiesPage() {
   const [entityForm, setEntityForm] = useState({
     name: '',
     type: 'currency',
+    subtype: '',
     description: '',
     minPrice: '',
     maxPrice: '',
-    definedInFile: ''
+    definedInFile: '',
+    priceTier: '1',
+    storeId: '',
+    consumable: true
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -949,6 +953,21 @@ public enum LootRarity {
 
   const [selectedFile, setSelectedFile] = useState(codebaseFiles[0]);
 
+  // Helper function to get price from tier
+  const getPriceFromTier = (tier: string) => {
+    const tierPrices: { [key: string]: string } = {
+      '1': '$0.99',
+      '2': '$1.99', 
+      '3': '$2.99',
+      '4': '$4.99',
+      '5': '$9.99',
+      '6': '$19.99',
+      '7': '$49.99',
+      '8': '$99.99'
+    };
+    return tierPrices[tier] || '$0.99';
+  };
+
   // For demo purposes - no actual filtering
   const filteredFiles = codebaseFiles;
   const filteredEntities = gameEntities;
@@ -956,11 +975,15 @@ public enum LootRarity {
   const startAddingEntity = () => {
     setEntityForm({
       name: '',
-      type: 'currency',
+      type: 'consumable',
+      subtype: 'currency',
       description: '',
       minPrice: '',
       maxPrice: '',
-      definedInFile: ''
+      definedInFile: '',
+      priceTier: '1',
+      storeId: '',
+      consumable: true
     });
     setSelectedEntity(null);
     setIsEditing(true);
@@ -971,11 +994,18 @@ public enum LootRarity {
     if (entity) {
       setEntityForm({
         name: entity.name,
-        type: entity.type,
+        type: entity.type === 'currency' || entity.type === 'consumable' ? 'consumable' : 
+              entity.type === 'cosmetic' ? 'non-consumable' : 'subscription',
+        subtype: entity.type === 'currency' ? 'currency' : 
+                 entity.type === 'consumable' ? 'item' :
+                 entity.type === 'cosmetic' ? 'cosmetic' : 'progression',
         description: entity.description,
         minPrice: entity.minPrice,
         maxPrice: entity.maxPrice,
-        definedInFile: entity.definedInFile
+        definedInFile: entity.definedInFile,
+        priceTier: '1',
+        storeId: entity.name.toLowerCase().replace(/\s+/g, '_'),
+        consumable: entity.type === 'currency' || entity.type === 'consumable'
       });
       setSelectedEntity(entityId);
       setIsEditing(true);
@@ -1007,13 +1037,18 @@ public enum LootRarity {
       const newGameEntity = {
         id: entityId,
         name: entityForm.name,
-        type: entityForm.type,
+        type: entityForm.subtype || entityForm.type,
         definedInFile: entityForm.definedInFile,
         description: entityForm.description,
-        minPrice: entityForm.minPrice,
-        maxPrice: entityForm.maxPrice,
+        minPrice: entityForm.minPrice || getPriceFromTier(entityForm.priceTier),
+        maxPrice: entityForm.maxPrice || getPriceFromTier(entityForm.priceTier),
         codeRef: '',
-        color: entityColors[gameEntities.length % entityColors.length]
+        color: entityColors[gameEntities.length % entityColors.length],
+        productType: entityForm.type,
+        subtype: entityForm.subtype,
+        storeId: entityForm.storeId,
+        priceTier: entityForm.priceTier,
+        consumable: entityForm.consumable
       };
       
       setGameEntities(prev => [...prev, newGameEntity]);
@@ -1102,19 +1137,55 @@ public enum LootRarity {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-black mb-2">Type</label>
+                    <label className="block text-sm font-bold text-black mb-2">Product Type</label>
                     <select
                       value={entityForm.type}
-                      onChange={(e) => setEntityForm(prev => ({ ...prev, type: e.target.value }))}
+                      onChange={(e) => {
+                        setEntityForm(prev => ({ 
+                          ...prev, 
+                          type: e.target.value,
+                          subtype: e.target.value === 'consumable' ? 'currency' : '',
+                          consumable: e.target.value === 'consumable'
+                        }));
+                      }}
                       className="w-full px-4 py-3 border-2 border-black rounded-lg text-sm focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
                     >
-                      <option value="currency">💰 Currency</option>
-                      <option value="cosmetic">🎨 Cosmetic</option>
-                      <option value="progression">⚡ Progression</option>
-                      <option value="consumable">🍎 Consumable</option>
+                      <option value="consumable">🛒 Consumable</option>
+                      <option value="non-consumable">💎 Non-Consumable</option>
+                      <option value="subscription">🔄 Subscription</option>
                     </select>
                   </div>
                 </div>
+                {entityForm.type === 'consumable' && (
+                  <div>
+                    <label className="block text-sm font-bold text-black mb-2">Consumable Type</label>
+                    <select
+                      value={entityForm.subtype}
+                      onChange={(e) => setEntityForm(prev => ({ ...prev, subtype: e.target.value }))}
+                      className="w-full px-4 py-3 border-2 border-black rounded-lg text-sm focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
+                    >
+                      <option value="currency">💰 Currency</option>
+                      <option value="item">🍎 Item</option>
+                      <option value="resource">⚡ Resource</option>
+                      <option value="other">🎯 Other</option>
+                    </select>
+                  </div>
+                )}
+                {entityForm.type === 'non-consumable' && (
+                  <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-2">
+                      <div className="text-blue-500 mt-0.5">
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-blue-800 mb-1">⚠️ Restoration Required</p>
+                        <p className="text-xs text-blue-700">Non-consumable items must be able to restore purchases when users reinstall the app or switch devices. Ensure your code handles purchase restoration properly.</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 <div>
                   <label className="block text-sm font-bold text-black mb-2">Description</label>
                   <input
@@ -1140,27 +1211,82 @@ public enum LootRarity {
                     ))}
                   </select>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-bold text-black mb-2">Min Price</label>
+                    <label className="block text-sm font-bold text-black mb-2">Store Product ID</label>
                     <input
                       type="text"
-                      value={entityForm.minPrice}
-                      onChange={(e) => setEntityForm(prev => ({ ...prev, minPrice: e.target.value }))}
-                      placeholder="$0.99"
+                      value={entityForm.storeId}
+                      onChange={(e) => setEntityForm(prev => ({ ...prev, storeId: e.target.value }))}
+                      placeholder="com.yourcompany.yourgame.premium_gems"
                       className="w-full px-4 py-3 border-2 border-black rounded-lg text-sm focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
                     />
+                    <p className="text-xs text-gray-600 mt-1">Unique identifier for app stores (iOS App Store, Google Play)</p>
                   </div>
-                  <div>
-                    <label className="block text-sm font-bold text-black mb-2">Max Price</label>
-                    <input
-                      type="text"
-                      value={entityForm.maxPrice}
-                      onChange={(e) => setEntityForm(prev => ({ ...prev, maxPrice: e.target.value }))}
-                      placeholder="$4.99"
-                      className="w-full px-4 py-3 border-2 border-black rounded-lg text-sm focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
-                    />
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-bold text-black mb-2">Price Tier</label>
+                      <select
+                        value={entityForm.priceTier}
+                        onChange={(e) => setEntityForm(prev => ({ ...prev, priceTier: e.target.value }))}
+                        className="w-full px-4 py-3 border-2 border-black rounded-lg text-sm focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
+                      >
+                        <option value="1">Tier 1 - $0.99</option>
+                        <option value="2">Tier 2 - $1.99</option>
+                        <option value="3">Tier 3 - $2.99</option>
+                        <option value="4">Tier 4 - $4.99</option>
+                        <option value="5">Tier 5 - $9.99</option>
+                        <option value="6">Tier 6 - $19.99</option>
+                        <option value="7">Tier 7 - $49.99</option>
+                        <option value="8">Tier 8 - $99.99</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-black mb-2">Custom Price (Optional)</label>
+                      <input
+                        type="text"
+                        value={entityForm.minPrice}
+                        onChange={(e) => setEntityForm(prev => ({ ...prev, minPrice: e.target.value }))}
+                        placeholder="Override tier price"
+                        className="w-full px-4 py-3 border-2 border-black rounded-lg text-sm focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
+                      />
+                    </div>
                   </div>
+                  
+                  {entityForm.type === 'subscription' && (
+                    <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4">
+                      <h4 className="text-sm font-bold text-yellow-800 mb-3">🔄 Subscription Settings</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-yellow-800 mb-1">Duration</label>
+                          <select className="w-full px-3 py-2 border border-yellow-300 rounded text-sm">
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="yearly">Yearly</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-yellow-800 mb-1">Auto-Renewable</label>
+                          <select className="w-full px-3 py-2 border border-yellow-300 rounded text-sm">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div className="mt-3">
+                        <label className="block text-xs font-bold text-yellow-800 mb-1">Free Trial Period</label>
+                        <select className="w-full px-3 py-2 border border-yellow-300 rounded text-sm">
+                          <option value="none">No Trial</option>
+                          <option value="3_days">3 Days</option>
+                          <option value="7_days">7 Days</option>
+                          <option value="14_days">14 Days</option>
+                          <option value="30_days">30 Days</option>
+                        </select>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="flex space-x-3 pt-4">
                   <button
@@ -1237,10 +1363,30 @@ public enum LootRarity {
                           {entity.maxPrice}
                         </span>
                       </div>
-                      <div className="mt-2">
-                        <span className="bg-purple-300 text-black px-2 py-1 rounded-full text-xs font-bold capitalize border border-black">
-                          {entity.type}
-                        </span>
+                      <div className="mt-2 space-y-1">
+                        <div className="flex flex-wrap gap-1">
+                          <span className={`px-2 py-1 rounded-full text-xs font-bold capitalize border border-black ${
+                            (entity as any).productType === 'consumable' ? 'bg-green-300 text-black' :
+                            (entity as any).productType === 'non-consumable' ? 'bg-blue-300 text-black' :
+                            (entity as any).productType === 'subscription' ? 'bg-yellow-300 text-black' :
+                            'bg-purple-300 text-black'
+                          }`}>
+                            {(entity as any).productType || 
+                             (entity.type === 'currency' || entity.type === 'consumable' ? '🛒 Consumable' :
+                              entity.type === 'cosmetic' ? '💎 Non-Consumable' : 
+                              entity.type === 'progression' ? '🔄 Subscription' : entity.type)}
+                          </span>
+                          {((entity as any).subtype || entity.type) && (
+                            <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs font-medium border border-gray-300">
+                              {(entity as any).subtype || entity.type}
+                            </span>
+                          )}
+                        </div>
+                        {(entity as any).storeId && (
+                          <div className="text-xs text-gray-500 font-mono">
+                            ID: {(entity as any).storeId}
+                          </div>
+                        )}
                       </div>
                     </div>
                     <button
