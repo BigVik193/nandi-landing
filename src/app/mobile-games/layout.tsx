@@ -39,19 +39,61 @@ export default function MobileGamesLayout({
                   dangerouslySetInnerHTML={{
             __html: `
               function gtag_report_conversion(url) {
-                console.log('🎯 Conversion tracking triggered!', {
+                var isPurchase = url && url.includes('gumroad.com');
+                var eventType = isPurchase ? 'purchase' : 'add_to_cart';
+                
+                console.log(isPurchase ? '🛒 Purchase tracking triggered!' : '🛍️ Add to cart tracking triggered!', {
                   url: url,
                   conversionId: 'AW-17577910658/E4TcCKTE-5wbEILD5r1B',
                   value: 1.0,
-                  currency: 'USD'
+                  currency: 'USD',
+                  eventType: eventType
                 });
                 
                 var callback = function () {
-                  console.log('✅ Conversion callback executed, redirecting to:', url);
+                  console.log('✅ ' + (isPurchase ? 'Purchase' : 'Add to cart') + ' callback executed, navigating to:', url);
                   if (typeof(url) != 'undefined') {
-                    window.location = url;
+                    if (url.startsWith('#')) {
+                      // Internal navigation (scroll to section)
+                      var element = document.querySelector(url);
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    } else {
+                      // External navigation
+                      window.location = url;
+                    }
                   }
                 };
+                
+                if (isPurchase) {
+                  // Send purchase event for external Gumroad links
+                  gtag('event', 'purchase', {
+                      'transaction_id': 'mobile-games-' + Date.now(),
+                      'value': 1.0,
+                      'currency': 'USD',
+                      'items': [{
+                        'item_id': 'nandi-mobile-games-early-access',
+                        'item_name': 'Nandi Mobile Games Early Access',
+                        'category': 'Software',
+                        'quantity': 1,
+                        'price': 1.0
+                      }]
+                  });
+                } else {
+                  // Send add_to_cart event for internal navigation to pricing
+                  gtag('event', 'add_to_cart', {
+                      'currency': 'USD',
+                      'value': 1.0,
+                      'items': [{
+                        'item_id': 'nandi-mobile-games-early-access',
+                        'item_name': 'Nandi Mobile Games Early Access',
+                        'category': 'Software',
+                        'quantity': 1,
+                        'price': 1.0
+                      }]
+                  });
+                }
                 
                 gtag('event', 'conversion', {
                     'send_to': 'AW-17577910658/E4TcCKTE-5wbEILD5r1B',
@@ -60,7 +102,7 @@ export default function MobileGamesLayout({
                     'event_callback': callback
                 });
                 
-                console.log('📊 Google Ads conversion event sent');
+                console.log('📊 ' + (isPurchase ? 'Purchase' : 'Add to cart') + ' and conversion events sent');
                 return false;
               }
             `,
