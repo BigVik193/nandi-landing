@@ -60,8 +60,8 @@ export default function MobileGamesLayout({
                         element.scrollIntoView({ behavior: 'smooth' });
                       }
                     } else {
-                      // External navigation
-                      window.location = url;
+                      // External navigation - open in new tab, don't redirect current page
+                      window.open(url, '_blank');
                     }
                   }
                 };
