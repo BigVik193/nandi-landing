@@ -36,24 +36,35 @@ export default function MobileGamesLayout({
       <Script
         id="gtag-conversion-tracking"
         strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            function gtag_report_conversion(url) {
-              var callback = function () {
-                if (typeof(url) != 'undefined') {
-                  window.location = url;
-                }
-              };
-              gtag('event', 'conversion', {
-                  'send_to': 'AW-17577910658/E4TcCKTE-5wbEILD5r1B',
-                  'value': 1.0,
-                  'currency': 'USD',
-                  'event_callback': callback
-              });
-              return false;
-            }
-          `,
-        }}
+                  dangerouslySetInnerHTML={{
+            __html: `
+              function gtag_report_conversion(url) {
+                console.log('🎯 Conversion tracking triggered!', {
+                  url: url,
+                  conversionId: 'AW-17577910658/E4TcCKTE-5wbEILD5r1B',
+                  value: 1.0,
+                  currency: 'USD'
+                });
+                
+                var callback = function () {
+                  console.log('✅ Conversion callback executed, redirecting to:', url);
+                  if (typeof(url) != 'undefined') {
+                    window.location = url;
+                  }
+                };
+                
+                gtag('event', 'conversion', {
+                    'send_to': 'AW-17577910658/E4TcCKTE-5wbEILD5r1B',
+                    'value': 1.0,
+                    'currency': 'USD',
+                    'event_callback': callback
+                });
+                
+                console.log('📊 Google Ads conversion event sent');
+                return false;
+              }
+            `,
+          }}
       />
       {children}
     </>
