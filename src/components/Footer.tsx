@@ -17,12 +17,20 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Contact Link */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white">Contact</h3>
-            <ul className="space-y-2">
-              <li><a href="#contact" className="text-gray-300 hover:text-white transition-colors">Get in touch</a></li>
-            </ul>
+          {/* Links */}
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-white">Resources</h3>
+              <ul className="space-y-2">
+                <li><a href="/blog" className="text-gray-300 hover:text-white transition-colors">Blog</a></li>
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-white">Contact</h3>
+              <ul className="space-y-2">
+                <li><a href="#contact" className="text-gray-300 hover:text-white transition-colors">Get in touch</a></li>
+              </ul>
+            </div>
           </div>
         </div>
 

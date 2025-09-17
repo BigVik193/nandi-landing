@@ -195,7 +195,7 @@ export default function StorePermissions({ onNext, onBack, userData }: StorePerm
                   <div className="space-y-2">
                     <p className="text-xs font-medium text-gray-700 mb-2">Grant permissions for:</p>
                     {area.permissions.map((permission) => {
-                      const permType = permissionTypes[permission];
+                      const permType = permissionTypes[permission as keyof typeof permissionTypes];
                       const isSelected = selectedAreas[area.id]?.includes(permission);
                       
                       return (
