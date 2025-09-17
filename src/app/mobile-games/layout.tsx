@@ -67,12 +67,7 @@ export default function MobileGamesLayout({
                 };
                 
                 // Send the Google Ads conversion event first
-                gtag('event', 'conversion', {
-                    'send_to': 'AW-17577910658/E4TcCKTE-5wbEILD5r1B',
-                    'value': 1.0,
-                    'currency': 'USD',
-                    'event_callback': callback
-                });
+               
                 
                 // Then send the analytics event after a small delay
                 setTimeout(function() {
@@ -89,6 +84,13 @@ export default function MobileGamesLayout({
                           'price': 1.0
                         }]
                     });
+
+                    gtag('event', 'conversion', {
+                        'send_to': 'AW-17577910658/E4TcCKTE-5wbEILD5r1B',
+                        'value': 1.0,
+                        'currency': 'USD',
+                        'transaction_id': 'mobile-games-' + Date.now()
+                    });
                   } else {
                     // Send add_to_cart event for internal navigation to pricing
                     gtag('event', 'add_to_cart', {
@@ -104,6 +106,13 @@ export default function MobileGamesLayout({
                     });
                   }
                 }, 100);
+
+                 gtag('event', 'conversion', {
+                    'send_to': 'AW-17577910658/E4TcCKTE-5wbEILD5r1B',
+                    'value': 1.0,
+                    'currency': 'USD',
+                    'event_callback': callback
+                });
                 
                 console.log('📊 ' + (isPurchase ? 'Purchase' : 'Add to cart') + ' and conversion events sent');
                 return false;
