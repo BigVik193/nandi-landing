@@ -4,13 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-We are building a landing page for an AI-powered “always-on growth autopilot” for Shopify merchants who sell merch, apparel, and custom goods. Our target customers are independent creators, influencers selling branded merchandise, streetwear and lifestyle brands, and small custom gift shops—businesses that care about growing sales and maximizing conversions.
-
-The product acts like a built-in growth and marketing team. It continuously tests and improves storefront elements—such as product images, banners, calls-to-action, and layouts—so stores are always optimized to convert. It integrates seamlessly with Shopify and GA4 to provide deep analytics and clear proof of growth.
-
-The design language should be fun, colorful, and visually engaging—big product imagery (shirts, mugs, hoodies), bold storefront visuals that evolve in real time, and animations showing traffic and sales metrics rising. The aesthetic should match the friendly, polished look of Shopify apps: clean layouts, bright visuals, trust badges, and familiar archetypes of merchants (influencers, niche clothing brands, custom goods sellers).
-
-The landing page should feel effortless and exciting, making growth feel automatic. Key sections include: a bold hero with imagery of a storefront dynamically improving; social proof with recognizable merchant types or logos; a demo animation showing the platform connecting to Shopify and driving sales; testimonials and case studies; and a clear pricing section with simple subscription tiers. The overall impression should be approachable, trustworthy, and focused on boosting revenue for small to mid-sized merchants.
+Nandi is a B2B platform that empowers indie game developers and studios to deploy dynamic in-game stores for mobile games. The platform leverages AI to continuously optimize bundles, pricing, and layouts while enabling external payment processing to bypass Apple/Google commissions.
 
 This is a Next.js 15.5.2 project using the App Router architecture with TypeScript and Tailwind CSS v4. The project appears to be a landing page for "Nandi" and uses pnpm as the package manager.
 
