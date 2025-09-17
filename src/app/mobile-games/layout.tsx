@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Nandi AI for Mobile Games - Maximize Revenue Per Player with AI-Powered IAP Optimization",
@@ -29,5 +30,32 @@ export default function MobileGamesLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      {/* Google Ads Conversion Tracking */}
+      <Script
+        id="gtag-conversion-tracking"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            function gtag_report_conversion(url) {
+              var callback = function () {
+                if (typeof(url) != 'undefined') {
+                  window.location = url;
+                }
+              };
+              gtag('event', 'conversion', {
+                  'send_to': 'AW-17577910658/E4TcCKTE-5wbEILD5r1B',
+                  'value': 1.0,
+                  'currency': 'USD',
+                  'event_callback': callback
+              });
+              return false;
+            }
+          `,
+        }}
+      />
+      {children}
+    </>
+  );
 }

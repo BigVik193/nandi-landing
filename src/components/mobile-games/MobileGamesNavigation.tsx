@@ -2,6 +2,11 @@
 
 import { useState } from 'react';
 
+// Declare global function for TypeScript
+declare global {
+  function gtag_report_conversion(url?: string): boolean;
+}
+
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -34,7 +39,13 @@ export default function Navigation() {
             <img src="/discord-logo.png" alt="Discord" className="w-5 h-5" />
             <span>Join Discord</span>
           </a>
-          <a href="https://vikrambattalapalli.gumroad.com/l/awfvm" target="_blank" rel="noopener noreferrer" className="bg-black text-white px-4 py-2 rounded-full font-medium text-base hover:bg-gray-800 transition-colors">
+          <a 
+            href="https://vikrambattalapalli.gumroad.com/l/awfvm" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="bg-black text-white px-4 py-2 rounded-full font-medium text-base hover:bg-gray-800 transition-colors"
+            onClick={() => gtag_report_conversion('https://vikrambattalapalli.gumroad.com/l/awfvm')}
+          >
             Get Early Access
           </a>
         </div>

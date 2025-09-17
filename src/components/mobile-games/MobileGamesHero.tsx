@@ -1,5 +1,10 @@
 import Image from 'next/image';
 
+// Declare global function for TypeScript
+declare global {
+  function gtag_report_conversion(url?: string): boolean;
+}
+
 export default function Hero() {
   return (
     <main className="min-h-screen flex items-center pt-24 pb-20 sm:pt-20 sm:pb-0">
@@ -25,6 +30,7 @@ export default function Hero() {
               <a 
                 href="#pricing" 
                 className="bg-black text-white px-8 py-4 rounded-full font-medium text-lg hover:bg-gray-800 transition-colors text-center ring-4 ring-orange-300 ring-offset-2"
+                onClick={() => gtag_report_conversion()}
               >
                 Get Early Access - 50% Off Forever
               </a>

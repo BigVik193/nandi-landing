@@ -1,3 +1,8 @@
+// Declare global function for TypeScript
+declare global {
+  function gtag_report_conversion(url?: string): boolean;
+}
+
 export default function Subscription() {
   return (
     <section id="pricing" className="bg-pricing py-20">
@@ -37,7 +42,13 @@ export default function Subscription() {
             
             {/* CTA Button - Top Position */}
             <div className="mb-6">
-              <a href="https://vikrambattalapalli.gumroad.com/l/awfvm" target="_blank" rel="noopener noreferrer" className="w-full bg-purple-300 hover:bg-purple-400 text-black font-medium py-4 px-6 rounded-full text-lg transition-colors text-center inline-block">
+              <a 
+                href="https://vikrambattalapalli.gumroad.com/l/awfvm" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-full bg-purple-300 hover:bg-purple-400 text-black font-medium py-4 px-6 rounded-full text-lg transition-colors text-center inline-block"
+                onClick={() => gtag_report_conversion('https://vikrambattalapalli.gumroad.com/l/awfvm')}
+              >
                 Get Early Access
               </a>
             </div>
@@ -123,7 +134,13 @@ export default function Subscription() {
             
             {/* CTA Button - Top Position */}
             <div className="mb-6">
-              <a href="https://vikrambattalapalli.gumroad.com/l/awfvm" target="_blank" rel="noopener noreferrer" className="w-full bg-purple-300 hover:bg-purple-400 text-black font-medium py-4 px-6 rounded-full text-lg transition-colors text-center inline-block">
+              <a 
+                href="https://vikrambattalapalli.gumroad.com/l/awfvm" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-full bg-purple-300 hover:bg-purple-400 text-black font-medium py-4 px-6 rounded-full text-lg transition-colors text-center inline-block"
+                onClick={() => gtag_report_conversion('https://vikrambattalapalli.gumroad.com/l/awfvm')}
+              >
                 Get Early Access
               </a>
             </div>
