@@ -352,13 +352,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a 
-                href="/mobile-games#pricing" 
+                href="/#pricing" 
                 className="bg-black text-white px-8 py-4 rounded-full font-medium text-lg hover:bg-gray-800 transition-colors"
               >
                 Get Early Access
               </a>
               <a 
-                href="/mobile-games#contact" 
+                href="/#contact" 
                 className="text-black font-medium text-lg hover:text-gray-700 transition-colors"
               >
                 Learn more →

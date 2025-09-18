@@ -120,7 +120,7 @@ Dynamic stores use **AI-powered optimization** to:
 
 Ready to **boost your mobile game revenue** and **reduce platform fees**?
 
-[Get early access to Nandi](/mobile-games#pricing) and join 500+ studios already using AI-powered dynamic stores to maximize their mobile game revenue.
+[Get early access to Nandi](/#pricing) and join 500+ studios already using AI-powered dynamic stores to maximize their mobile game revenue.
     `
   },
   {
@@ -221,7 +221,7 @@ The fastest way to start increasing purchases without engineering overhead follo
 
 Mobile game monetization doesn't have to consume engineering resources. With dynamic stores powered by AI optimization, studios can increase in-game purchases and boost ARPU while freeing developers to focus on what matters most - building great games.
 
-Ready to **increase in-game purchases** and **boost ARPU** without consuming engineering resources? [Contact our team](/mobile-games#contact) to learn how Nandi's dynamic stores can help your studio achieve higher conversion rates while giving your engineering team back their time.
+Ready to **increase in-game purchases** and **boost ARPU** without consuming engineering resources? [Contact our team](/#contact) to learn how Nandi's dynamic stores can help your studio achieve higher conversion rates while giving your engineering team back their time.
     `
   },
   {
@@ -343,9 +343,9 @@ When it comes to **maximizing conversions and revenue**, most studios benefit fr
 
 ## Next Steps
 
-Ready to **maximize your mobile game store conversions** and increase ARPU? [Get early access to Nandi](/mobile-games#pricing) and see why 500+ studios choose AI-powered dynamic stores over manual optimization tools.
+Ready to **maximize your mobile game store conversions** and increase ARPU? [Get early access to Nandi](/#pricing) and see why 500+ studios choose AI-powered dynamic stores over manual optimization tools.
 
-Want to explore all options? [Compare features and pricing](/mobile-games#contact) to find the perfect solution for your studio's specific monetization goals.
+Want to explore all options? [Compare features and pricing](/#contact) to find the perfect solution for your studio's specific monetization goals.
     `
   },
   {
@@ -460,9 +460,9 @@ The traditional approach of manual price testing and quarterly store updates sim
 
 ## Getting Started
 
-If you're looking to **boost in-game purchases and streamline live-ops**, [learn more about Nandi](/mobile-games#pricing) and see how our platform can transform your in-game store into a continuously optimizing revenue engine.
+If you're looking to **boost in-game purchases and streamline live-ops**, [learn more about Nandi](/#pricing) and see how our platform can transform your in-game store into a continuously optimizing revenue engine.
 
-Ready to see Nandi in action? [Schedule a demo](/mobile-games#contact) to discover how AI-powered monetization can transform your mobile game's revenue performance.
+Ready to see Nandi in action? [Schedule a demo](/#contact) to discover how AI-powered monetization can transform your mobile game's revenue performance.
     `
   },
   {
@@ -600,9 +600,9 @@ Well-executed store layout optimization typically delivers:
 
 Optimizing your in-game store layout represents one of the highest ROI improvements available to mobile game studios. When executed systematically with the right tools, you can drive meaningful gains in conversions and ARPU while reducing engineering burden and accelerating iteration speed.
 
-Ready to transform your in-game store into a continuously optimizing revenue engine? [Learn more about Nandi](/mobile-games#pricing) and discover how AI-powered layout optimization can boost your game's monetization performance.
+Ready to transform your in-game store into a continuously optimizing revenue engine? [Learn more about Nandi](/#pricing) and discover how AI-powered layout optimization can boost your game's monetization performance.
 
-Want to see layout optimization in action? [Schedule a demo](/mobile-games#contact) to explore how automated testing and personalization can increase your store conversions without adding engineering overhead.
+Want to see layout optimization in action? [Schedule a demo](/#contact) to explore how automated testing and personalization can increase your store conversions without adding engineering overhead.
     `
   }
 ];

@@ -1,28 +1,59 @@
-import Navigation from '@/components/Navigation';
-import Hero from '@/components/Hero';
-import WhatIsNandi from '@/components/WhatIsNandi';
-import LearnSection from '@/components/LearnSection';
-import PersonalizeSection from '@/components/PersonalizeSection';
-import StatsSection from '@/components/StatsSection';
-import Competitive from '@/components/Competitive';
-import Subscription from '@/components/Subscription';
-import FAQ from '@/components/FAQ';
-import Contact from '@/components/Contact';
+import type { Metadata } from "next";
+import MobileGamesNavigation from '@/components/mobile-games/MobileGamesNavigation';
+import MobileGamesHero from '@/components/mobile-games/MobileGamesHero';
+import MobileGamesWhatIsNandi from '@/components/mobile-games/MobileGamesWhatIsNandi';
+import MobileGamesLearnSection from '@/components/mobile-games/MobileGamesLearnSection';
+import MobileGamesPersonalizeSection from '@/components/mobile-games/MobileGamesPersonalizeSection';
+import MobileGamesStatsSection from '@/components/mobile-games/MobileGamesStatsSection';
+import MobileGamesCompetitive from '@/components/mobile-games/MobileGamesCompetitive';
+import MobileGamesSubscription from '@/components/mobile-games/MobileGamesSubscription';
+import MobileGamesFAQ from '@/components/mobile-games/MobileGamesFAQ';
+import MobileGamesContact from '@/components/mobile-games/MobileGamesContact';
 import Footer from '@/components/Footer';
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://trynandi.com'),
+  title: "Mobile Game Monetization - AI-Powered IAP & In-Game Store Optimization",
+  description: "Maximize revenue per player with AI-powered in-app purchase optimization. Automated testing of IAP offers, pricing, and in-game store layouts to boost ARPU and conversions without app updates.",
+  keywords: [
+    "mobile game monetization",
+    "in-app purchase optimization", 
+    "IAP testing",
+    "in-game store optimization",
+    "mobile game revenue optimization",
+    "ARPU optimization",
+    "game monetization AI",
+    "automated IAP testing",
+    "mobile game conversion optimization",
+    "game revenue automation"
+  ],
+  openGraph: {
+    title: "Nandi AI - Mobile Game Monetization & IAP Optimization Platform",
+    description: "Maximize revenue per player with AI-powered in-app purchase optimization. Automated testing of IAP offers, pricing, and in-game store layouts to boost ARPU without app updates.",
+    siteName: "Nandi AI",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nandi AI - Mobile Game Monetization & IAP Optimization", 
+    description: "AI-powered in-app purchase optimization. Boost ARPU and conversions with automated IAP testing.",
+  },
+};
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-hero">
-      <Navigation />
-      <Hero />
-      <WhatIsNandi />
-      <LearnSection />
-      <PersonalizeSection />
-      <StatsSection />
-      <Competitive />
-      <Subscription />
-      <Contact />
-      <FAQ />
+      <MobileGamesNavigation />
+      <MobileGamesHero />
+      <MobileGamesWhatIsNandi />
+      <MobileGamesLearnSection />
+      <MobileGamesPersonalizeSection />
+      <MobileGamesStatsSection />
+      <MobileGamesCompetitive />
+      <MobileGamesSubscription />
+      <MobileGamesContact />
+      <MobileGamesFAQ />
       <Footer />
     </div>
   );

@@ -11,7 +11,7 @@ export default function WorkspacePage() {
   };
 
   const handleBack = () => {
-    window.location.href = '/mobile-games';
+    window.location.href = '/';
   };
 
   return (
@@ -35,7 +35,7 @@ export default function WorkspacePage() {
             <span className="text-sm font-medium text-yellow-800">🚧 Developer Override</span>
             <div className="flex space-x-2">
               <button
-                onClick={() => window.location.href = '/mobile-games'}
+                onClick={() => window.location.href = '/'}
                 className="bg-yellow-200 text-yellow-800 px-3 py-1 rounded text-sm font-medium hover:bg-yellow-300 transition-colors"
               >
                 ← Back

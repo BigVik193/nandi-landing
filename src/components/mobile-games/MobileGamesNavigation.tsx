@@ -13,7 +13,7 @@ export default function Navigation() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-hero">
       <div className="flex items-center justify-between px-4 sm:px-8 py-2">
-      <a href="/mobile-games" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+      <a href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
         <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
           <div className="w-4 h-4 bg-white transform rotate-45"></div>
         </div>
@@ -22,10 +22,10 @@ export default function Navigation() {
       
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
-          <a href="/mobile-games#installation" className="text-base text-gray-700 hover:text-black transition-colors">Installation</a>
-          <a href="/mobile-games#personalize" className="text-base text-gray-700 hover:text-black transition-colors">How it works</a>
+          <a href="/#installation" className="text-base text-gray-700 hover:text-black transition-colors">Installation</a>
+          <a href="/#personalize" className="text-base text-gray-700 hover:text-black transition-colors">How it works</a>
           <a href="/onboarding/workspace" className="text-base text-gray-700 hover:text-black transition-colors">Demo</a>
-          <a href="/mobile-games#contact" className="text-base text-gray-700 hover:text-black transition-colors">Help</a>
+          <a href="/#contact" className="text-base text-gray-700 hover:text-black transition-colors">Help</a>
         </div>
       
         {/* Desktop CTA Buttons */}
@@ -66,10 +66,10 @@ export default function Navigation() {
       {isOpen && (
         <div className="md:hidden bg-white border-t border-gray-200 shadow-lg">
           <div className="flex flex-col space-y-1 px-4 py-4">
-            <a href="/mobile-games#installation" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>Installation</a>
-            <a href="/mobile-games#personalize" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>How it works</a>
+            <a href="/#installation" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>Installation</a>
+            <a href="/#personalize" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>How it works</a>
             <a href="/onboarding/workspace" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>Demo</a>
-            <a href="/mobile-games#contact" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>Help</a>
+            <a href="/#contact" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>Help</a>
             <div className="flex flex-col space-y-3 pt-4 border-t border-gray-200">
               <a 
                 href="https://discord.gg/uyADMgnV" 

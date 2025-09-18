@@ -17,11 +17,11 @@ const figtree = Figtree({
 export const metadata: Metadata = {
   metadataBase: new URL('https://trynandi.com'),
   title: {
-    default: "Nandi AI - E-commerce Store Optimization & Conversion Rate Automation",
-    template: "%s | Nandi AI - E-commerce Growth Engine",
+    default: "Mobile Game Monetization - AI-Powered IAP & In-Game Store Optimization",
+    template: "%s | Nandi AI - Mobile Game Monetization Platform",
   },
-  description: "Boost online store sales with AI-powered conversion optimization. Automated A/B testing, real-time store improvements, and seamless integration. Perfect for merch stores, custom goods, and apparel brands.",
-  keywords: ["e-commerce optimization", "conversion rate optimization", "online store AI tools", "ecommerce automation", "e-commerce store growth", "sales optimization", "AI marketing automation", "automated testing"],
+  description: "Maximize revenue per player with AI-powered in-app purchase optimization. Automated testing of IAP offers, pricing, and in-game store layouts to boost ARPU and conversions without app updates.",
+  keywords: ["mobile game monetization", "in-app purchase optimization", "IAP testing", "in-game store optimization", "mobile game revenue optimization", "ARPU optimization", "game monetization AI", "automated IAP testing"],
   authors: [{ name: "Nandi Team" }],
   creator: "Nandi Team",
   publisher: "Nandi Team",
@@ -31,25 +31,16 @@ export const metadata: Metadata = {
     telephone: false,
   },
   openGraph: {
-    title: "Nandi AI - Automated E-commerce Store Optimization & Growth",
-    description: "AI-powered conversion optimization for online stores. Boost sales with automated A/B testing, real-time improvements, and seamless integration.",
+    title: "Nandi AI - Mobile Game Monetization & IAP Optimization Platform",
+    description: "Maximize revenue per player with AI-powered in-app purchase optimization. Automated testing of IAP offers, pricing, and in-game store layouts to boost ARPU without app updates.",
     siteName: "Nandi AI",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Nandi AI - E-commerce Store Optimization Platform",
-      },
-    ],
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nandi AI - Automated E-commerce Growth Engine", 
-    description: "AI-powered conversion optimization for online stores. Boost sales automatically.",
-    images: ["/twitter-image.png"],
+    title: "Nandi AI - Mobile Game Monetization & IAP Optimization", 
+    description: "AI-powered in-app purchase optimization. Boost ARPU and conversions with automated IAP testing.",
   },
   robots: {
     index: true,
@@ -61,11 +52,6 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
   },
 };
 

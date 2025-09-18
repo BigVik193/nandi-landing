@@ -29,7 +29,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
   const handleSaveDraft = () => {
     const confirmed = window.confirm('Save your progress and return to the main site? You can continue your setup later.');
     if (confirmed) {
-      window.location.href = '/mobile-games';
+      window.location.href = '/';
     }
   };
 
