@@ -86,7 +86,7 @@ export default function MobileGamesLayout({
                     });
 
                     gtag('event', 'conversion', {
-                        'send_to': 'AW-17577910658/E4TcCKTE-5wbEILD5r1B',
+                        'send_to': 'AW-17577910658/fom2CL_E-5wbEILD5r1B',
                         'value': 1.0,
                         'currency': 'USD',
                         'transaction_id': 'mobile-games-' + Date.now()
