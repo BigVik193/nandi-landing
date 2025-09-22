@@ -6,29 +6,33 @@ export default function Footer() {
         <div className="grid md:grid-cols-2 gap-8 mb-12">
           {/* Company Info */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
+            <a href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
               <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
                 <div className="w-4 h-4 bg-black transform rotate-45"></div>
               </div>
               <span className="text-2xl font-bold text-white">Nandi</span>
-            </div>
+            </a>
             <p className="text-gray-300 leading-relaxed">
-              Your always-on growth engine. Supercharge your store with AI-powered optimization.
+              AI-powered mobile game monetization. Maximize revenue per player with dynamic in-game stores and automated optimization.
             </p>
           </div>
 
           {/* Links */}
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-white">Resources</h3>
+              <h3 className="text-lg font-semibold text-white">Platform</h3>
               <ul className="space-y-2">
-                <li><a href="/blog" className="text-gray-300 hover:text-white transition-colors">Blog</a></li>
+                <li><a href="/" className="text-gray-300 hover:text-white transition-colors">Home</a></li>
+                <li><a href="/#installation" className="text-gray-300 hover:text-white transition-colors">Installation</a></li>
+                <li><a href="/#personalize" className="text-gray-300 hover:text-white transition-colors">How it works</a></li>
+                <li><a href="/onboarding/workspace" className="text-gray-300 hover:text-white transition-colors">Demo</a></li>
               </ul>
             </div>
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-white">Contact</h3>
+              <h3 className="text-lg font-semibold text-white">Resources</h3>
               <ul className="space-y-2">
-                <li><a href="#contact" className="text-gray-300 hover:text-white transition-colors">Get in touch</a></li>
+                <li><a href="/blog" className="text-gray-300 hover:text-white transition-colors">Blog</a></li>
+                <li><a href="/#contact" className="text-gray-300 hover:text-white transition-colors">Contact</a></li>
               </ul>
             </div>
           </div>

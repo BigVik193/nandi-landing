@@ -259,6 +259,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="px-4 sm:px-8 py-6">
           <div className="max-w-4xl mx-auto">
             <nav className="text-sm">
+              <Link href="/" className="text-gray-600 hover:text-black transition-colors">
+                Home
+              </Link>
+              <span className="mx-2 text-gray-400">/</span>
               <Link href="/blog" className="text-gray-600 hover:text-black transition-colors">
                 Blog
               </Link>
