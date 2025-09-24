@@ -25,7 +25,7 @@ export default function Footer() {
                 <li><a href="/" className="text-gray-300 hover:text-white transition-colors">Home</a></li>
                 <li><a href="/#installation" className="text-gray-300 hover:text-white transition-colors">Installation</a></li>
                 <li><a href="/#personalize" className="text-gray-300 hover:text-white transition-colors">How it works</a></li>
-                <li><a href="/onboarding/workspace" className="text-gray-300 hover:text-white transition-colors">Demo</a></li>
+                <li><a href="/auth/signup" className="text-gray-300 hover:text-white transition-colors">Get Started</a></li>
               </ul>
             </div>
             <div className="space-y-4">

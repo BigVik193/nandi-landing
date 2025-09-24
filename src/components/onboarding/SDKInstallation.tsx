@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { HiCode, HiCheck, HiClipboard } from 'react-icons/hi';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface SDKInstallationProps {
   onNext: (data: any) => void;
@@ -21,7 +22,7 @@ public class NandiBootstrap : MonoBehaviour
 {
     void Start()
     {
-        NandiSDK.Init(new NandiConfig { AppId = "YOUR_APP_ID" });
+        NandiSDK.Init("YOUR_API_KEY");
     }
 
     public void OnLevelComplete()
@@ -37,9 +38,7 @@ public class NandiBootstrap : MonoBehaviour
 
 void UMyGameInstance::Init()
 {
-    FNandiConfig Config;
-    Config.AppId = TEXT("YOUR_APP_ID");
-    UNandiSDK::Init(Config);
+    UNandiSDK::Init(TEXT("YOUR_API_KEY"));
 }
 
 void AMyGameMode::HandleLevelComplete()
@@ -55,7 +54,7 @@ void AMyGameMode::HandleLevelComplete()
     code: `extends Node
 
 func _ready():
-    Nandi.init({"appId": "YOUR_APP_ID"})
+    Nandi.init("YOUR_API_KEY")
 
 func on_level_complete():
     Nandi.present_upsell({"trigger": "level_complete"})`
@@ -69,7 +68,7 @@ func on_level_complete():
 class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    NandiSDK.init(config: NandiConfig(appId: "YOUR_APP_ID"))
+    NandiSDK.init(apiKey: "YOUR_API_KEY")
     return true
   }
 }
@@ -82,13 +81,12 @@ func onLevelComplete() {
     title: 'Native Android (Kotlin)',
     language: 'kotlin',
     code: `import com.nandi.sdk.NandiSDK
-import com.nandi.sdk.NandiConfig
 import com.nandi.sdk.NandiUpsellOptions
 
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        NandiSDK.init(NandiConfig(appId = "YOUR_APP_ID"))
+        NandiSDK.init("YOUR_API_KEY")
     }
 }
 
@@ -99,6 +97,7 @@ fun onLevelComplete() {
 };
 
 export default function SDKInstallation({ onNext, onBack, userData }: SDKInstallationProps) {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<keyof typeof codeExamples>(
     userData.techStack?.toLowerCase().includes('unity') ? 'unity' :
     userData.techStack?.toLowerCase().includes('unreal') ? 'unreal' :
@@ -110,39 +109,67 @@ export default function SDKInstallation({ onNext, onBack, userData }: SDKInstall
   
   const [formData, setFormData] = useState({
     selectedSDK: userData.techStack || '',
-    appId: `${userData.gameProjectName?.toLowerCase().replace(/\s+/g, '-') || 'demo-game'}-${Date.now()}`,
-    diagnosticsComplete: false,
-    configPulled: false,
-    telemetryPosted: false
   });
+  const [apiKey, setApiKey] = useState<string | null>(null);
+  const [isGeneratingApiKey, setIsGeneratingApiKey] = useState(false);
+  const [apiKeyName, setApiKeyName] = useState('');
 
-  const [isRunningDiagnostics, setIsRunningDiagnostics] = useState(false);
-
-  const runDiagnostics = async () => {
-    setIsRunningDiagnostics(true);
-    
-    // Quick realistic loading for demo
-    setTimeout(() => {
-      setFormData(prev => ({ ...prev, configPulled: true }));
-    }, 300);
-    
-    setTimeout(() => {
-      setFormData(prev => ({ ...prev, telemetryPosted: true }));
-    }, 600);
-    
-    setTimeout(() => {
-      setFormData(prev => ({ ...prev, diagnosticsComplete: true }));
-      setIsRunningDiagnostics(false);
-    }, 1000);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.diagnosticsComplete) {
-      alert('Please test the integration first to continue.');
+  const generateApiKey = async () => {
+    if (!userData.gameId) {
+      alert('Game ID not found. Please go back and complete project setup first.');
       return;
     }
-    onNext(formData);
+
+    if (!apiKeyName.trim()) {
+      alert('Please enter a name for your API key.');
+      return;
+    }
+
+    setIsGeneratingApiKey(true);
+    
+    try {
+      const response = await fetch('/api/api-keys', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          gameId: userData.gameId,
+          name: apiKeyName.trim(),
+          permissions: { read: true, write: true }
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to generate API key');
+      }
+
+      setApiKey(data.apiKey.key);
+    } catch (error) {
+      console.error('Error generating API key:', error);
+      alert(error instanceof Error ? error.message : 'Failed to generate API key');
+    } finally {
+      setIsGeneratingApiKey(false);
+    }
+  };
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!apiKey) {
+      alert('Please generate an API key first.');
+      return;
+    }
+    
+    // Pass the form data to the next step
+    onNext({
+      ...formData,
+      apiKey,
+      developerId: userData.developerId,
+      gameId: userData.gameId
+    });
   };
 
   return (
@@ -156,61 +183,82 @@ export default function SDKInstallation({ onNext, onBack, userData }: SDKInstall
       </p>
       
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Step 1: SDK Selection */}
+        {/* Step 1: API Key Generation */}
         <div className="space-y-4">
           <h3 className="text-xl font-semibold text-black border-b-2 border-black pb-2">
-            Step 1: SDK Package
+            Step 1: Generate API Key
           </h3>
           <p className="text-gray-600">
-            We've selected the right SDK for your platform: <strong>{userData.techStack}</strong>
+            Generate a secure API key for your game: <strong>{userData.gameProjectName}</strong>
           </p>
           
-          <div className="bg-gray-50 rounded-lg p-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span className="font-medium">Ready to install:</span>
-              <span className="text-gray-700">Nandi SDK for {userData.techStack}</span>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                API Key Name
+              </label>
+              <div className="flex items-end space-x-4">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    value={apiKeyName}
+                    onChange={(e) => setApiKeyName(e.target.value)}
+                    disabled={!!apiKey}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    placeholder="e.g., Production SDK Key, Development Key, etc."
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={generateApiKey}
+                  disabled={isGeneratingApiKey || !!apiKey}
+                  className={`px-6 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
+                    apiKey
+                      ? 'bg-green-500 text-white cursor-not-allowed'
+                      : isGeneratingApiKey
+                      ? 'bg-gray-400 text-white cursor-not-allowed'
+                      : 'bg-purple-500 text-white hover:bg-purple-600'
+                  }`}
+                >
+                  {apiKey ? 'Generated ✓' : 
+                   isGeneratingApiKey ? 'Generating...' : 
+                   'Generate'}
+                </button>
+              </div>
             </div>
           </div>
+
+          {apiKey && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <p className="text-amber-800 font-medium mb-2">Your API Key (save this securely):</p>
+              <div className="flex items-center space-x-2">
+                <div className="bg-white p-3 rounded border border-amber-300 font-mono text-sm break-all flex-1">
+                  {apiKey}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(apiKey);
+                    // Optional: Show a brief "Copied!" message
+                  }}
+                  className="bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 rounded font-medium transition-colors flex items-center space-x-1"
+                  title="Copy API key"
+                >
+                  <HiClipboard className="w-4 h-4" />
+                  <span>Copy</span>
+                </button>
+              </div>
+              <p className="text-amber-700 text-xs mt-2">
+                This key won't be shown again. Copy it now and store it securely.
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* Step 2: App Registration */}
+        {/* Step 2: Code Integration */}
         <div className="space-y-4">
           <h3 className="text-xl font-semibold text-black border-b-2 border-black pb-2">
-            Step 2: Your App Credentials
-          </h3>
-          <p className="text-gray-600">
-            Your unique App ID and security credentials for connecting to Nandi's servers
-          </p>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Your App ID
-            </label>
-            <input
-              type="text"
-              value={formData.appId}
-              onChange={(e) => setFormData(prev => ({ ...prev, appId: e.target.value }))}
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm"
-              placeholder="Your unique app identifier"
-            />
-          </div>
-
-          <div className="bg-gray-50 rounded-lg p-4">
-            <div className="flex items-center space-x-3 mb-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span className="font-medium">Security Keys Ready</span>
-            </div>
-            <div className="text-sm text-gray-600 font-mono bg-white p-2 rounded border">
-              Public Key: pub_nandi_prod_2025_{formData.appId.slice(-8)}...
-            </div>
-          </div>
-        </div>
-
-        {/* Step 3: Code Integration */}
-        <div className="space-y-4">
-          <h3 className="text-xl font-semibold text-black border-b-2 border-black pb-2">
-            Step 3: Integration Code
+            Step 2: Integration Code
           </h3>
           <p className="text-gray-600">
             Add this code to your project to initialize the Nandi SDK
@@ -244,7 +292,7 @@ export default function SDKInstallation({ onNext, onBack, userData }: SDKInstall
                   <button
                     type="button"
                     onClick={() => navigator.clipboard.writeText(
-                      codeExamples[activeTab].code.replace('YOUR_APP_ID', formData.appId)
+                      codeExamples[activeTab].code.replace('YOUR_API_KEY', apiKey || 'YOUR_API_KEY')
                     )}
                     className="text-gray-400 hover:text-gray-600 transition-colors bg-gray-800 hover:bg-gray-700 p-2 rounded"
                     title="Copy code"
@@ -268,88 +316,13 @@ export default function SDKInstallation({ onNext, onBack, userData }: SDKInstall
                     }
                   }}
                 >
-                  {codeExamples[activeTab].code.replace('YOUR_APP_ID', formData.appId)}
+                  {codeExamples[activeTab].code.replace('YOUR_API_KEY', apiKey || 'YOUR_API_KEY')}
                 </SyntaxHighlighter>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Step 4: Diagnostics */}
-        <div className="space-y-4">
-          <h3 className="text-xl font-semibold text-black border-b-2 border-black pb-2">
-            Step 4: Run Diagnostics
-          </h3>
-          <p className="text-gray-600">
-            Test that your app can pull store configuration and post telemetry
-          </p>
-
-          <div className="space-y-3">
-            <div className={`flex items-center space-x-3 p-3 rounded-lg ${
-              formData.configPulled ? 'bg-green-50 border border-green-200' : 'bg-gray-50 border border-gray-200'
-            }`}>
-              <div className={`w-4 h-4 rounded-full ${
-                formData.configPulled ? 'bg-green-500' : 'bg-gray-300'
-              }`}>
-                {formData.configPulled && (
-                  <HiCheck className="w-4 h-4 text-white" />
-                )}
-              </div>
-              <span className={formData.configPulled ? 'text-green-800' : 'text-gray-600'}>
-                Pull sample server-driven store config
-              </span>
-            </div>
-
-            <div className={`flex items-center space-x-3 p-3 rounded-lg ${
-              formData.telemetryPosted ? 'bg-green-50 border border-green-200' : 'bg-gray-50 border border-gray-200'
-            }`}>
-              <div className={`w-4 h-4 rounded-full ${
-                formData.telemetryPosted ? 'bg-green-500' : 'bg-gray-300'
-              }`}>
-                {formData.telemetryPosted && (
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                )}
-              </div>
-              <span className={formData.telemetryPosted ? 'text-green-800' : 'text-gray-600'}>
-                Post non-PII telemetry events
-              </span>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={runDiagnostics}
-            disabled={isRunningDiagnostics || formData.diagnosticsComplete}
-            className={`w-full py-3 px-6 rounded-lg font-medium transition-colors ${
-              formData.diagnosticsComplete
-                ? 'bg-green-500 text-white cursor-not-allowed'
-                : isRunningDiagnostics
-                ? 'bg-gray-400 text-white cursor-not-allowed'
-                : 'bg-purple-500 text-white hover:bg-purple-600'
-            }`}
-          >
-            {formData.diagnosticsComplete ? 'Diagnostics Complete ✓' : 
-             isRunningDiagnostics ? 'Running Diagnostics...' : 
-             'Run Diagnostics Test'}
-          </button>
-
-          {formData.diagnosticsComplete && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
-                  <HiCheck className="w-3 h-3 text-white" />
-                </div>
-                <p className="text-green-800 font-medium">Integration Successful!</p>
-              </div>
-              <p className="text-green-700 text-sm mt-2">
-                Your game can now receive store configuration from Nandi and report experiment events. 
-                No visual changes are live yet - that comes in the next steps.
-              </p>
-            </div>
-          )}
-        </div>
 
         {/* Navigation Buttons */}
         <div className="flex justify-between pt-6">
