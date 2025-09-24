@@ -4,7 +4,7 @@ create table if not exists public.players (
   game_id bigint not null references public.games(id) on delete cascade,
   external_player_id text not null, -- Developer's internal player ID
   device_id text,
-  platform text check (platform in ('ios', 'android')),
+  platform text check (platform in ('ios', 'android', 'both')),
   app_version text,
   sdk_version text,
   first_seen_at timestamptz default now() not null,
@@ -23,6 +23,16 @@ create trigger players_updated_at
 
 -- Add RLS policies
 alter table public.players enable row level security;
+
+-- Developers can manage players of their games
+create policy "Developers can manage players of their games"
+on public.players for all
+to authenticated
+using (
+  game_id in (
+    select id from public.games where developer_id = auth.uid()
+  )
+);
 
 -- Add indexes
 create index idx_players_game_id on public.players(game_id);

@@ -6,7 +6,7 @@ create table if not exists public.sku_variants (
   price_cents bigint not null, -- Price in cents for consistency
   quantity bigint not null default 1, -- Quantity of the virtual item
   currency text not null default 'USD',
-  platform text not null check (platform in ('ios', 'android')),
+  platform text not null check (platform in ('ios', 'android', 'both')),
   product_type text check (product_type in ('consumable', 'non_consumable', 'auto_renewable_subscription', 'non_renewing_subscription')),
   package_name text, -- For Google Play bundle identifier verification
   name text, -- Optional display name for this variant
@@ -26,6 +26,18 @@ create trigger sku_variants_updated_at
 
 -- Add RLS policies
 alter table public.sku_variants enable row level security;
+
+-- Developers can manage SKU variants of their virtual items
+create policy "Developers can manage SKU variants of their virtual items"
+on public.sku_variants for all
+to authenticated
+using (
+  virtual_item_id in (
+    select vi.id from public.virtual_items vi
+    join public.games g on vi.game_id = g.id
+    where g.developer_id = auth.uid()
+  )
+);
 
 -- Add indexes
 create index idx_sku_variants_virtual_item_id on public.sku_variants(virtual_item_id);

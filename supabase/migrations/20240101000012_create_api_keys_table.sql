@@ -24,6 +24,16 @@ create trigger api_keys_updated_at
 -- Add RLS policies
 alter table public.api_keys enable row level security;
 
+-- Developers can manage API keys of their games
+create policy "Developers can manage API keys of their games"
+on public.api_keys for all
+to authenticated
+using (
+  game_id in (
+    select id from public.games where developer_id = auth.uid()
+  )
+);
+
 -- Add indexes
 create index idx_api_keys_game_id on public.api_keys(game_id);
 create index idx_api_keys_key_hash on public.api_keys(key_hash);

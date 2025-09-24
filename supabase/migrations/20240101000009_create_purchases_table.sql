@@ -7,7 +7,7 @@ create table if not exists public.purchases (
   experiment_arm_id bigint references public.experiment_arms(id) on delete set null,
   transaction_id text not null, -- Platform transaction ID
   receipt_data text, -- Legacy receipt data (deprecated - use App Store Server API for Apple 2025)
-  platform text not null check (platform in ('ios', 'android')),
+  platform text not null check (platform in ('ios', 'android', 'both')),
   price_cents bigint not null,
   currency text not null,
   quantity bigint not null default 1,
@@ -20,7 +20,7 @@ create table if not exists public.purchases (
   subscription_group_id text, -- Apple subscription group identifier
   offer_identifier text, -- Apple promotional offer identifier
   offer_type text check (offer_type in ('introductory', 'promotional', 'subscription_offer_code')),
-  original_platform text check (original_platform in ('ios', 'macos', 'tvos', 'visionos', 'android')),
+  original_platform text check (original_platform in ('ios', 'macos', 'tvos', 'visionos', 'android', 'both')),
   auto_renewing boolean, -- For subscription auto-renewal status
   expires_date timestamptz, -- For subscriptions
   grace_period_expires_date timestamptz, -- Apple grace period
@@ -54,12 +54,26 @@ create trigger purchases_updated_at
 -- Add RLS policies
 alter table public.purchases enable row level security;
 
--- Add unique constraints for platform-specific identifiers
-alter table public.purchases 
-add constraint unique_apple_transaction unique (original_transaction_id) deferrable initially deferred;
+-- Developers can view purchases of their players
+create policy "Developers can view purchases of their players"
+on public.purchases for all
+to authenticated
+using (
+  player_id in (
+    select p.id from public.players p
+    join public.games g on p.game_id = g.id
+    where g.developer_id = auth.uid()
+  )
+);
 
-alter table public.purchases 
-add constraint unique_google_purchase_token unique (purchase_token) deferrable initially deferred;
+-- Add unique constraints for platform-specific identifiers (only when not null)
+create unique index unique_apple_transaction 
+on public.purchases (original_transaction_id) 
+where original_transaction_id is not null;
+
+create unique index unique_google_purchase_token 
+on public.purchases (purchase_token) 
+where purchase_token is not null;
 
 -- Add indexes
 create index idx_purchases_player_id on public.purchases(player_id);
@@ -87,3 +101,8 @@ create index idx_purchases_original_platform on public.purchases(original_platfo
 create index idx_purchases_platform_state on public.purchases(platform, purchase_state);
 create index idx_purchases_player_expires on public.purchases(player_id, expires_date);
 create index idx_purchases_subscription_status on public.purchases(subscription_group_id, auto_renewing, expires_date);
+
+-- Additional performance indexes
+create index idx_purchases_experiment_arm_id_created_at 
+on public.purchases(experiment_arm_id, created_at);
+create index idx_purchases_status_verified_at on public.purchases(status, verified_at);

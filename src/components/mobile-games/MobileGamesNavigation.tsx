@@ -21,10 +21,9 @@ export default function Navigation() {
       </a>
       
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
+        <div className="hidden md:flex items-center space-x-8 flex-1 justify-center">
           <a href="/#installation" className="text-base text-gray-700 hover:text-black transition-colors">Installation</a>
           <a href="/#personalize" className="text-base text-gray-700 hover:text-black transition-colors">How it works</a>
-          <a href="/onboarding/workspace" className="text-base text-gray-700 hover:text-black transition-colors">Demo</a>
           <a href="/#contact" className="text-base text-gray-700 hover:text-black transition-colors">Help</a>
         </div>
       
@@ -48,6 +47,12 @@ export default function Navigation() {
           >
             Get Early Access
           </a>
+          <a 
+            href="/auth/signup"
+            className="bg-white text-black border-2 border-black px-4 py-2 rounded-full font-medium text-base hover:bg-gray-50 transition-colors"
+          >
+            Get Started
+          </a>
         </div>
 
         {/* Mobile Menu Button */}
@@ -68,7 +73,6 @@ export default function Navigation() {
           <div className="flex flex-col space-y-1 px-4 py-4">
             <a href="/#installation" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>Installation</a>
             <a href="/#personalize" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>How it works</a>
-            <a href="/onboarding/workspace" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>Demo</a>
             <a href="/#contact" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>Help</a>
             <div className="flex flex-col space-y-3 pt-4 border-t border-gray-200">
               <a 
@@ -89,6 +93,13 @@ export default function Navigation() {
                 onClick={() => setIsOpen(false)}
               >
                 Get Early Access
+              </a>
+              <a 
+                href="/auth/signup"
+                className="bg-white text-black border-2 border-black px-4 py-2 rounded-full font-medium text-center hover:bg-gray-50 transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Get Started
               </a>
             </div>
           </div>

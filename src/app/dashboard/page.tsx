@@ -1,10 +1,163 @@
 'use client';
 
-import { useState } from 'react';
-import { HiTrendingUp, HiTrendingDown, HiEye, HiCurrencyDollar, HiUsers, HiChartBar, HiCog, HiPlay, HiPause, HiPlus } from 'react-icons/hi';
+import { useState, useEffect } from 'react';
+import { HiTrendingUp, HiTrendingDown, HiEye, HiCurrencyDollar, HiUsers, HiChartBar, HiCog, HiPlay, HiPause, HiPlus, HiCode, HiClipboard, HiKey, HiTrash } from 'react-icons/hi';
+import { useAuth } from '@/contexts/AuthContext';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+const codeExamples = {
+  unity: {
+    title: 'Unity (C#)',
+    language: 'csharp',
+    code: `using Nandi;
+
+public class NandiBootstrap : MonoBehaviour
+{
+    void Start()
+    {
+        NandiSDK.Init("YOUR_API_KEY");
+    }
+
+    public void OnLevelComplete()
+    {
+        NandiSDK.PresentUpsell(new NandiUpsellOptions { Trigger = "level_complete" });
+    }
+}`
+  },
+  unreal: {
+    title: 'Unreal Engine (C++)',
+    language: 'cpp',
+    code: `#include "NandiSDK.h"
+
+void UMyGameInstance::Init()
+{
+    UNandiSDK::Init(TEXT("YOUR_API_KEY"));
+}
+
+void AMyGameMode::HandleLevelComplete()
+{
+    FNandiUpsellOptions Opts;
+    Opts.Trigger = TEXT("level_complete");
+    UNandiSDK::PresentUpsell(Opts);
+}`
+  },
+  godot: {
+    title: 'Godot (GDScript)',
+    language: 'python',
+    code: `extends Node
+
+func _ready():
+    Nandi.init("YOUR_API_KEY")
+
+func on_level_complete():
+    Nandi.present_upsell({"trigger": "level_complete"})`
+  },
+  ios: {
+    title: 'Native iOS (Swift)',
+    language: 'swift',
+    code: `import NandiSDK
+
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+  func application(_ application: UIApplication,
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    NandiSDK.init(apiKey: "YOUR_API_KEY")
+    return true
+  }
+}
+
+func onLevelComplete() {
+  NandiSDK.presentUpsell(NandiUpsellOptions(trigger: "level_complete"))
+}`
+  },
+  android: {
+    title: 'Native Android (Kotlin)',
+    language: 'kotlin',
+    code: `import com.nandi.sdk.NandiSDK
+import com.nandi.sdk.NandiUpsellOptions
+
+class App : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        NandiSDK.init("YOUR_API_KEY")
+    }
+}
+
+fun onLevelComplete() {
+    NandiSDK.presentUpsell(NandiUpsellOptions(trigger = "level_complete"))
+}`
+  }
+};
 
 export default function DashboardPage() {
+  const { user } = useAuth();
   const [selectedTest, setSelectedTest] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<keyof typeof codeExamples>('unity');
+  const [showSDKIntegration, setShowSDKIntegration] = useState(false);
+  const [apiKeys, setApiKeys] = useState<any[]>([]);
+  const [loadingApiKeys, setLoadingApiKeys] = useState(true);
+  
+  // Use the first API key for code examples, or fallback to mock
+  const userApiKey = apiKeys.length > 0 ? apiKeys[0].key_prefix.replace('...', 'abc123def456') : "nandi_prod_2024_abc123def456";
+
+  // Function to redact API key (show first 12 chars + ...)
+  const redactApiKey = (key: string) => {
+    return key.substring(0, 12) + '...';
+  };
+
+  // Fetch API keys
+  useEffect(() => {
+    const fetchApiKeys = async () => {
+      if (!user) return;
+      
+      try {
+        // TODO: Get actual game ID from user's games - for now using mock ID
+        const gameId = 1; // This should come from user's selected game
+        const response = await fetch(`/api/api-keys?gameId=${gameId}`);
+        
+        if (response.ok) {
+          const data = await response.json();
+          setApiKeys(data.apiKeys || []);
+        } else if (response.status === 404) {
+          // Game not found or no access - this is expected for new users
+          setApiKeys([]);
+        } else {
+          console.error('Failed to fetch API keys:', response.statusText);
+          setApiKeys([]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch API keys:', error);
+        setApiKeys([]);
+      } finally {
+        setLoadingApiKeys(false);
+      }
+    };
+
+    fetchApiKeys();
+  }, [user]);
+
+  // Delete API key
+  const handleDeleteApiKey = async (apiKeyId: number, name: string) => {
+    if (!confirm(`Are you sure you want to delete the API key "${name}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/api-keys/${apiKeyId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setApiKeys(prev => prev.filter(key => key.id !== apiKeyId));
+      } else {
+        alert('Failed to delete API key. Please try again.');
+      }
+    } catch (error) {
+      console.error('Failed to delete API key:', error);
+      alert('Failed to delete API key. Please try again.');
+    }
+  };
 
   // Mock data for analytics
   const analytics = {
@@ -97,12 +250,14 @@ export default function DashboardPage() {
             >
               Manage Entities
             </button>
+            {/* REMOVED: Store Builder button
             <button 
               onClick={() => window.location.href = '/build'}
               className="bg-black text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-800 transition-colors"
             >
               Store Builder
             </button>
+            */}
           </div>
         </div>
       </div>
@@ -377,6 +532,206 @@ export default function DashboardPage() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* SDK Integration Section */}
+        <div className="mt-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-black">SDK Integration</h2>
+            <button 
+              onClick={() => setShowSDKIntegration(!showSDKIntegration)}
+              className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-bold hover:bg-gray-200 transition-colors flex items-center space-x-2"
+            >
+              <HiCode className="w-4 h-4" />
+              <span>{showSDKIntegration ? 'Hide' : 'Show'} Integration Code</span>
+            </button>
+          </div>
+
+          {showSDKIntegration && (
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+              {/* Your API Key */}
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-black mb-3">Your API Key</h3>
+                <div className="flex items-center space-x-2">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 font-mono text-sm flex-1 break-all">
+                    {userApiKey}
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(userApiKey);
+                    }}
+                    className="bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 rounded-lg font-medium transition-colors flex items-center space-x-1"
+                    title="Copy API key"
+                  >
+                    <HiClipboard className="w-4 h-4" />
+                    <span>Copy</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Integration Code */}
+              <div>
+                <h3 className="text-lg font-semibold text-black mb-3">Integration Code</h3>
+                
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                  {/* Tab Navigation */}
+                  <div className="border-b border-gray-200 bg-gray-50">
+                    <div className="flex flex-wrap">
+                      {Object.entries(codeExamples).map(([key, example]) => (
+                        <button
+                          key={key}
+                          onClick={() => setActiveTab(key as keyof typeof codeExamples)}
+                          className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                            activeTab === key
+                              ? 'border-purple-500 text-purple-600 bg-white'
+                              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                          }`}
+                        >
+                          {example.title}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Code Content */}
+                  <div className="p-0">
+                    <div className="relative">
+                      <div className="absolute top-4 right-4 z-10">
+                        <button
+                          onClick={() => navigator.clipboard.writeText(
+                            codeExamples[activeTab].code.replace('YOUR_API_KEY', userApiKey)
+                          )}
+                          className="text-gray-400 hover:text-gray-600 transition-colors bg-gray-800 hover:bg-gray-700 p-2 rounded"
+                          title="Copy code"
+                        >
+                          <HiClipboard className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <SyntaxHighlighter
+                        language={codeExamples[activeTab].language}
+                        style={tomorrow}
+                        customStyle={{
+                          margin: 0,
+                          borderRadius: 0,
+                          fontSize: '14px',
+                          lineHeight: '1.5',
+                        }}
+                        codeTagProps={{
+                          style: {
+                            fontSize: '14px',
+                            fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+                          }
+                        }}
+                      >
+                        {codeExamples[activeTab].code.replace('YOUR_API_KEY', userApiKey)}
+                      </SyntaxHighlighter>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* API Key Management */}
+        <div className="mt-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-black">API Key Management</h2>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+            {loadingApiKeys ? (
+              <div className="p-8 text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+                <p className="text-gray-600 mt-2">Loading API keys...</p>
+              </div>
+            ) : apiKeys.length === 0 ? (
+              <div className="p-8 text-center">
+                <HiKey className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-bold text-gray-600 mb-2">No API Keys</h3>
+                <p className="text-sm text-gray-500">Create your first API key in the onboarding flow.</p>
+              </div>
+            ) : (
+              <>
+                {/* Table Header */}
+                <div className="bg-gray-50 px-6 py-3 border-b border-gray-200">
+                  <div className="grid grid-cols-12 gap-4 text-sm font-medium text-gray-700">
+                    <div className="col-span-3">Name</div>
+                    <div className="col-span-4">Key</div>
+                    <div className="col-span-2">Created</div>
+                    <div className="col-span-2">Status</div>
+                    <div className="col-span-1">Actions</div>
+                  </div>
+                </div>
+
+                {/* Table Body */}
+                <div className="divide-y divide-gray-200">
+                  {apiKeys.map((apiKey) => (
+                    <div key={apiKey.id} className="px-6 py-4 hover:bg-gray-50">
+                      <div className="grid grid-cols-12 gap-4 items-center">
+                        {/* Name */}
+                        <div className="col-span-3">
+                          <div className="flex items-center space-x-2">
+                            <HiKey className="w-4 h-4 text-gray-400" />
+                            <span className="font-medium text-gray-900">{apiKey.name}</span>
+                          </div>
+                        </div>
+
+                        {/* Key (Redacted) */}
+                        <div className="col-span-4">
+                          <div className="flex items-center space-x-2">
+                            <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-700">
+                              {apiKey.key_prefix}
+                            </code>
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(apiKey.key_prefix);
+                                // Could add a toast notification here
+                                alert('Redacted key copied! Full keys are only shown once during creation.');
+                              }}
+                              className="text-gray-400 hover:text-gray-600 transition-colors"
+                              title="Copy redacted key"
+                            >
+                              <HiClipboard className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Created Date */}
+                        <div className="col-span-2">
+                          <span className="text-sm text-gray-600">
+                            {new Date(apiKey.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+
+                        {/* Status */}
+                        <div className="col-span-2">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            apiKey.is_active 
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {apiKey.is_active ? 'Active' : 'Inactive'}
+                          </span>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="col-span-1">
+                          <button
+                            onClick={() => handleDeleteApiKey(apiKey.id, apiKey.name)}
+                            className="text-red-400 hover:text-red-600 transition-colors p-1 rounded hover:bg-red-50"
+                            title="Delete API key"
+                          >
+                            <HiTrash className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

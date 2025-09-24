@@ -14,7 +14,10 @@ create table if not exists public.experiment_arms (
   unique(experiment_id, name),
   
   -- Ensure unique sku_variant per experiment
-  unique(experiment_id, sku_variant_id)
+  unique(experiment_id, sku_variant_id),
+  
+  -- Add composite unique constraint needed for foreign key reference
+  unique(experiment_id, id)
 );
 
 -- Create updated_at trigger
@@ -24,6 +27,43 @@ create trigger experiment_arms_updated_at
 
 -- Add RLS policies
 alter table public.experiment_arms enable row level security;
+
+-- Developers can manage experiment arms of their experiments
+create policy "Developers can manage experiment arms of their experiments"
+on public.experiment_arms for all
+to authenticated
+using (
+  experiment_id in (
+    select e.id from public.experiments e
+    join public.games g on e.game_id = g.id
+    where g.developer_id = auth.uid()
+  )
+);
+
+-- Add data validation functions
+-- Ensure experiment arms traffic weights don't exceed 100% per experiment
+create or replace function validate_experiment_arms_traffic()
+returns trigger as $$
+begin
+  if (
+    select sum(traffic_weight) 
+    from public.experiment_arms 
+    where experiment_id = coalesce(new.experiment_id, old.experiment_id)
+  ) > 100 then
+    raise exception 'Total traffic weight for experiment cannot exceed 100%%';
+  end if;
+  return coalesce(new, old);
+end;
+$$ language plpgsql;
+
+create trigger validate_experiment_arms_traffic_trigger
+  after insert or update or delete on public.experiment_arms
+  for each row execute function validate_experiment_arms_traffic();
+
+-- Ensure at most one control arm per experiment
+create unique index unique_control_arm_per_experiment 
+on public.experiment_arms (experiment_id) 
+where is_control = true;
 
 -- Add indexes
 create index idx_experiment_arms_experiment_id on public.experiment_arms(experiment_id);

@@ -21,11 +21,29 @@ create table if not exists public.events (
   store_version text, -- Platform store version
   properties jsonb default '{}',
   timestamp timestamptz default now() not null,
-  created_at timestamptz default now() not null
+  created_at timestamptz default now() not null,
+  updated_at timestamptz default now() not null
 );
+
+-- Create updated_at trigger
+create trigger events_updated_at
+  before update on public.events
+  for each row execute function public.handle_updated_at();
 
 -- Add RLS policies
 alter table public.events enable row level security;
+
+-- Developers can view events of their players
+create policy "Developers can view events of their players"
+on public.events for all
+to authenticated
+using (
+  player_id in (
+    select p.id from public.players p
+    join public.games g on p.game_id = g.id
+    where g.developer_id = auth.uid()
+  )
+);
 
 -- Add indexes
 create index idx_events_player_id on public.events(player_id);
@@ -48,3 +66,7 @@ create index idx_events_subscription_group_id on public.events(subscription_grou
 create index idx_events_player_event_type_timestamp on public.events(player_id, event_type, timestamp);
 create index idx_events_experiment_timestamp on public.events(experiment_id, timestamp);
 create index idx_events_sku_variant_timestamp on public.events(sku_variant_id, timestamp);
+
+-- Additional performance indexes for event analytics
+create index idx_events_player_timestamp_type 
+on public.events(player_id, timestamp, event_type);

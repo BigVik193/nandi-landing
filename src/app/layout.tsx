@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque, Figtree } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from '@vercel/analytics/next';
+import { AuthProvider } from '@/contexts/AuthContext';
 import "./globals.css";
 
 const bricolageGrotesque = Bricolage_Grotesque({
@@ -85,7 +86,9 @@ export default function RootLayout({
       <body
         className={`${bricolageGrotesque.variable} ${figtree.variable} antialiased`}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
         <Analytics />
         <Script 
           src="https://assets.calendly.com/assets/external/widget.js" 

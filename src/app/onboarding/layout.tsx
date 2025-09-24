@@ -8,11 +8,9 @@ interface OnboardingLayoutProps {
 }
 
 const steps = [
-  { id: 'workspace', name: 'Account', href: '/onboarding/workspace' },
   { id: 'project', name: 'Project', href: '/onboarding/project' },
   { id: 'sdk', name: 'SDK', href: '/onboarding/sdk' },
-  { id: 'analytics', name: 'Analytics', href: '/onboarding/analytics' },
-  { id: 'path-selection', name: 'Setup', href: '/onboarding/path-selection' }
+  // Note: Account/workspace creation happens before onboarding and doesn't show progress
 ];
 
 export default function OnboardingLayout({ children }: OnboardingLayoutProps) {

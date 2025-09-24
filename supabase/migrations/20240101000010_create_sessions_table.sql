@@ -4,7 +4,7 @@ create table if not exists public.sessions (
   player_id bigint not null references public.players(id) on delete cascade,
   session_token text unique not null,
   device_id text,
-  platform text check (platform in ('ios', 'android')),
+  platform text check (platform in ('ios', 'android', 'both')),
   app_version text,
   sdk_version text,
   ip_address inet,
@@ -27,6 +27,18 @@ create trigger sessions_updated_at
 -- Add RLS policies
 alter table public.sessions enable row level security;
 
+-- Developers can view sessions of their players
+create policy "Developers can view sessions of their players"
+on public.sessions for all
+to authenticated
+using (
+  player_id in (
+    select p.id from public.players p
+    join public.games g on p.game_id = g.id
+    where g.developer_id = auth.uid()
+  )
+);
+
 -- Add indexes
 create index idx_sessions_player_id on public.sessions(player_id);
 create index idx_sessions_session_token on public.sessions(session_token);
@@ -35,3 +47,7 @@ create index idx_sessions_platform on public.sessions(platform);
 create index idx_sessions_started_at on public.sessions(started_at);
 create index idx_sessions_ended_at on public.sessions(ended_at);
 create index idx_sessions_created_at on public.sessions(created_at);
+
+-- Additional performance indexes for session analytics
+create index idx_sessions_duration 
+on public.sessions(player_id, started_at, ended_at);

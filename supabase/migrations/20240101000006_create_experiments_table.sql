@@ -28,6 +28,30 @@ create trigger experiments_updated_at
 -- Add RLS policies
 alter table public.experiments enable row level security;
 
+-- Developers can manage experiments of their games
+create policy "Developers can manage experiments of their games"
+on public.experiments for all
+to authenticated
+using (
+  game_id in (
+    select id from public.games where developer_id = auth.uid()
+  )
+);
+
+-- Add utility functions
+-- Function to get active experiments for a game
+create or replace function public.get_active_experiments(p_game_id bigint)
+returns setof public.experiments
+language sql
+security definer
+as $$
+  select * from public.experiments 
+  where game_id = p_game_id 
+  and status = 'running' 
+  and (start_date is null or start_date <= now())
+  and (end_date is null or end_date > now());
+$$;
+
 -- Add indexes
 create index idx_experiments_game_id on public.experiments(game_id);
 create index idx_experiments_virtual_item_id on public.experiments(virtual_item_id);
