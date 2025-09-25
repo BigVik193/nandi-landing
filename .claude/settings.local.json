@@ -10,7 +10,20 @@
       "Bash(pnpm add:*)",
       "Bash(npm install:*)",
       "WebFetch(domain:www.npmjs.com)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "WebFetch(domain:developers.google.com)",
+      "WebFetch(domain:developer.apple.com)",
+      "WebFetch(domain:www.revenuecat.com)",
+      "WebFetch(domain:docs.revenuecat.com)",
+      "Bash(chmod:*)",
+      "Bash(npx create-expo-app:*)",
+      "Bash(eas:*)",
+      "mcp__supabase__list_projects",
+      "mcp__supabase__list_tables",
+      "Bash(pkill:*)",
+      "Bash(rm:*)",
+      "Bash(pnpm dev:*)",
+      "mcp__supabase__execute_sql"
     ],
     "deny": [],
     "ask": []

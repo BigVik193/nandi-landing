@@ -25,6 +25,7 @@ export default function Navigation() {
           <a href="/#installation" className="text-base text-gray-700 hover:text-black transition-colors">Installation</a>
           <a href="/#personalize" className="text-base text-gray-700 hover:text-black transition-colors">How it works</a>
           <a href="/onboarding/workspace" className="text-base text-gray-700 hover:text-black transition-colors">Demo</a>
+          <a href="/test-onboarding/service-account" className="text-base text-orange-600 hover:text-orange-800 transition-colors font-medium">🧪 Test API</a>
           <a href="/#contact" className="text-base text-gray-700 hover:text-black transition-colors">Help</a>
         </div>
       
@@ -69,6 +70,7 @@ export default function Navigation() {
             <a href="/#installation" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>Installation</a>
             <a href="/#personalize" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>How it works</a>
             <a href="/onboarding/workspace" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>Demo</a>
+            <a href="/test-onboarding/service-account" className="text-base text-orange-600 hover:text-orange-800 transition-colors py-2 font-medium" onClick={() => setIsOpen(false)}>🧪 Test API</a>
             <a href="/#contact" className="text-base text-gray-700 hover:text-black transition-colors py-2" onClick={() => setIsOpen(false)}>Help</a>
             <div className="flex flex-col space-y-3 pt-4 border-t border-gray-200">
               <a 

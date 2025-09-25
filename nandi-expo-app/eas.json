@@ -1,0 +1,26 @@
+{
+  "cli": {
+    "version": ">= 7.8.4"
+  },
+  "build": {
+    "development": {
+      "android": {
+        "buildType": "apk",
+        "developmentClient": true
+      }
+    },
+    "preview": {
+      "android": {
+        "buildType": "app-bundle"
+      }
+    },
+    "production": {
+      "android": {
+        "buildType": "apk"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
