@@ -1,37 +1,40 @@
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+
+import HomeScreen from './src/screens/HomeScreen';
+import StoreScreen from './src/screens/StoreScreen';
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Nandi Test App</Text>
-      <Text style={styles.subtitle}>This is a minimal app for API testing.</Text>
-      <Text style={styles.package}>Package: com.hbellala.nandi</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#007AFF',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      >
+        <Stack.Screen 
+          name="Home" 
+          component={HomeScreen}
+          options={{ title: 'Nandi Test App' }}
+        />
+        <Stack.Screen 
+          name="Store" 
+          component={StoreScreen}
+          options={{ title: 'In-App Store' }}
+        />
+      </Stack.Navigator>
+      <StatusBar style="light" />
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  subtitle: {
-    fontSize: 16,
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  package: {
-    fontSize: 14,
-    fontFamily: 'monospace',
-    color: '#666',
-  },
-});

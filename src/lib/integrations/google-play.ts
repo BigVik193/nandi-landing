@@ -82,8 +82,9 @@ export class GooglePlayStoreAPI {
       await this.ensureApiInitialized();
 
       const inAppProduct = {
+        packageName: product.packageName,
         sku: product.sku,
-        productType: product.productType,
+        purchaseType: product.productType === 'managed' ? 'managedUser' : product.productType,
         status: product.status,
         defaultPrice: product.defaultPrice,
         listings: product.listings,

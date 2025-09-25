@@ -2,7 +2,7 @@
   "expo": {
     "name": "Nandi Test App",
     "slug": "nandi-test-app",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,7 +22,11 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.hbellala.nandi"
+      "package": "com.hbellala.nandi",
+      "versionCode": 2,
+      "permissions": [
+        "com.android.vending.BILLING"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -31,6 +35,14 @@
       "eas": {
         "projectId": "04d9f2a7-b499-4ec2-bd3d-7dfa9db8f722"
       }
-    }
+    },
+    "plugins": [
+      [
+        "react-native-iap",
+        {
+          "enablePromiseAPI": true
+        }
+      ]
+    ]
   }
 }

@@ -23,7 +23,8 @@
       "Bash(pkill:*)",
       "Bash(rm:*)",
       "Bash(pnpm dev:*)",
-      "mcp__supabase__execute_sql"
+      "mcp__supabase__execute_sql",
+      "Bash(npx expo install:*)"
     ],
     "deny": [],
     "ask": []
