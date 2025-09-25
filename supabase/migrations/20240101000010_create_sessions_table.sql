@@ -1,7 +1,7 @@
 -- Create sessions table
 create table if not exists public.sessions (
-  id bigint primary key generated always as identity,
-  player_id bigint not null references public.players(id) on delete cascade,
+  id uuid primary key default gen_random_uuid(),
+  player_id uuid not null references public.players(id) on delete cascade,
   session_token text unique not null,
   device_id text,
   platform text check (platform in ('ios', 'android', 'both')),

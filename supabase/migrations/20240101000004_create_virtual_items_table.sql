@@ -1,7 +1,7 @@
 -- Create virtual_items table
 create table if not exists public.virtual_items (
-  id bigint primary key generated always as identity,
-  game_id bigint not null references public.games(id) on delete cascade,
+  id uuid primary key default gen_random_uuid(),
+  game_id uuid not null references public.games(id) on delete cascade,
   name text not null,
   description text,
   type text not null check (type in ('consumable', 'non_consumable', 'subscription')),

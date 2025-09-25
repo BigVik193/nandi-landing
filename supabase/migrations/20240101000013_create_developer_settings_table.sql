@@ -1,6 +1,6 @@
 -- Create developer settings table for preferences
 create table if not exists public.developer_settings (
-  id bigint primary key generated always as identity,
+  id uuid primary key default gen_random_uuid(),
   developer_id uuid not null references public.developers(id) on delete cascade,
   setting_key text not null,
   setting_value jsonb not null,

@@ -20,7 +20,8 @@
       "mcp__supabase__execute_sql",
       "mcp__supabase__get_anon_key",
       "mcp__supabase__search_docs",
-      "WebFetch(domain:supabase.com)"
+      "WebFetch(domain:supabase.com)",
+      "Bash(pnpm install:*)"
     ],
     "deny": [],
     "ask": []

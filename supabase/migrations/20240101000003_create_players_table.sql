@@ -1,7 +1,7 @@
 -- Create players table
 create table if not exists public.players (
-  id bigint primary key generated always as identity,
-  game_id bigint not null references public.games(id) on delete cascade,
+  id uuid primary key default gen_random_uuid(),
+  game_id uuid not null references public.games(id) on delete cascade,
   external_player_id text not null, -- Developer's internal player ID
   device_id text,
   platform text check (platform in ('ios', 'android', 'both')),

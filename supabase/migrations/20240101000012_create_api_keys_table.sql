@@ -1,7 +1,7 @@
 -- Create api_keys table
 create table if not exists public.api_keys (
-  id bigint primary key generated always as identity,
-  game_id bigint not null references public.games(id) on delete cascade,
+  id uuid primary key default gen_random_uuid(),
+  game_id uuid not null references public.games(id) on delete cascade,
   name text not null,
   key_hash text unique not null, -- Hashed API key for security
   key_prefix text not null, -- First few characters for identification

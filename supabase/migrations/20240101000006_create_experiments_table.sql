@@ -1,8 +1,8 @@
 -- Create experiments table
 create table if not exists public.experiments (
-  id bigint primary key generated always as identity,
-  game_id bigint not null references public.games(id) on delete cascade,
-  virtual_item_id bigint not null references public.virtual_items(id) on delete cascade,
+  id uuid primary key default gen_random_uuid(),
+  game_id uuid not null references public.games(id) on delete cascade,
+  virtual_item_id uuid not null references public.virtual_items(id) on delete cascade,
   name text not null,
   description text,
   status text not null default 'draft' check (status in ('draft', 'running', 'paused', 'completed', 'archived')),
@@ -40,7 +40,7 @@ using (
 
 -- Add utility functions
 -- Function to get active experiments for a game
-create or replace function public.get_active_experiments(p_game_id bigint)
+create or replace function public.get_active_experiments(p_game_id uuid)
 returns setof public.experiments
 language sql
 security definer

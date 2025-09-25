@@ -1,18 +1,18 @@
 -- Create events table
 create table if not exists public.events (
-  id bigint primary key generated always as identity,
-  player_id bigint not null references public.players(id) on delete cascade,
-  session_id bigint references public.sessions(id) on delete set null,
+  id uuid primary key default gen_random_uuid(),
+  player_id uuid not null references public.players(id) on delete cascade,
+  session_id uuid references public.sessions(id) on delete set null,
   event_type text not null check (event_type in (
     'store_view', 'item_view', 'item_click', 'purchase_start', 'purchase_complete', 
     'purchase_fail', 'experiment_view', 'subscription_start', 'subscription_renew',
     'subscription_cancel', 'subscription_expire', 'offer_impression', 'custom'
   )),
-  virtual_item_id bigint references public.virtual_items(id) on delete set null,
-  sku_variant_id bigint references public.sku_variants(id) on delete set null,
-  experiment_id bigint references public.experiments(id) on delete set null,
-  experiment_arm_id bigint references public.experiment_arms(id) on delete set null,
-  purchase_id bigint references public.purchases(id) on delete set null,
+  virtual_item_id uuid references public.virtual_items(id) on delete set null,
+  sku_variant_id uuid references public.sku_variants(id) on delete set null,
+  experiment_id uuid references public.experiments(id) on delete set null,
+  experiment_arm_id uuid references public.experiment_arms(id) on delete set null,
+  purchase_id uuid references public.purchases(id) on delete set null,
   -- Platform-specific tracking fields (2025)
   app_transaction_id text, -- Track app download transaction
   offer_identifier text, -- Track promotional offers

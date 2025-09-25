@@ -1,9 +1,9 @@
 -- Create assignments table
 create table if not exists public.assignments (
-  id bigint primary key generated always as identity,
-  player_id bigint not null references public.players(id) on delete cascade,
-  experiment_id bigint not null references public.experiments(id) on delete cascade,
-  experiment_arm_id bigint not null references public.experiment_arms(id) on delete cascade,
+  id uuid primary key default gen_random_uuid(),
+  player_id uuid not null references public.players(id) on delete cascade,
+  experiment_id uuid not null references public.experiments(id) on delete cascade,
+  experiment_arm_id uuid not null references public.experiment_arms(id) on delete cascade,
   assigned_at timestamptz default now() not null,
   updated_at timestamptz default now() not null,
   
@@ -33,13 +33,13 @@ create trigger assignments_updated_at
 
 -- Add utility functions
 -- Function to get player's current experiment assignments
-create or replace function public.get_player_assignments(p_player_id bigint)
+create or replace function public.get_player_assignments(p_player_id uuid)
 returns table (
-  experiment_id bigint,
+  experiment_id uuid,
   experiment_name text,
-  experiment_arm_id bigint,
+  experiment_arm_id uuid,
   arm_name text,
-  sku_variant_id bigint
+  sku_variant_id uuid
 )
 language sql
 security definer

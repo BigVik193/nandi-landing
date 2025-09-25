@@ -1,3 +1,6 @@
+packages:
+  - 'nandi-sdk'
+
 onlyBuiltDependencies:
   - '@tailwindcss/oxide'
   - sharp

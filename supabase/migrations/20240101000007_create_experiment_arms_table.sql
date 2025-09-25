@@ -1,8 +1,8 @@
 -- Create experiment_arms table
 create table if not exists public.experiment_arms (
-  id bigint primary key generated always as identity,
-  experiment_id bigint not null references public.experiments(id) on delete cascade,
-  sku_variant_id bigint not null references public.sku_variants(id) on delete cascade,
+  id uuid primary key default gen_random_uuid(),
+  experiment_id uuid not null references public.experiments(id) on delete cascade,
+  sku_variant_id uuid not null references public.sku_variants(id) on delete cascade,
   name text not null,
   traffic_weight decimal(5,2) not null default 0.00 check (traffic_weight >= 0 and traffic_weight <= 100),
   is_control boolean not null default false,

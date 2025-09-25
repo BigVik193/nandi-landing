@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const type = searchParams.get('type');
   const error_code = searchParams.get('error_code');
   const error_description = searchParams.get('error_description');
-  const next = searchParams.get('next') ?? '/onboarding/project';
+  const next = searchParams.get('next') ?? '/dashboard';
 
   // Handle errors from Supabase (expired tokens, etc.)
   if (error_code) {
@@ -82,33 +82,11 @@ async function handleUserProfileCreation(user: any, origin: string, next: string
       .from('developers')
       .select('id')
       .eq('id', user.id)
-      .single();
+      .maybeSingle();
 
     if (existingDeveloper) {
-      // Developer already exists, check their onboarding progress
-      const { data: games } = await supabaseAdmin
-        .from('games')
-        .select('*')
-        .eq('developer_id', user.id);
-
-      // Determine next step based on onboarding status
-      const hasProjectSetup = games && games.length > 0 && games.some(game => 
-        game.name && game.genre && game.platform && game.monetization_model
-      );
-
-      const hasSDKSetup = games && games.some(game => 
-        ['configured', 'tested', 'active'].includes(game.integration_status)
-      );
-
-      let nextStep = '/onboarding/project';
-
-      if (hasProjectSetup && !hasSDKSetup) {
-        nextStep = '/onboarding/sdk';
-      } else if (hasProjectSetup && hasSDKSetup) {
-        nextStep = '/dashboard';
-      }
-
-      return NextResponse.redirect(`${origin}${nextStep}`);
+      // Developer already exists, redirect to dashboard
+      return NextResponse.redirect(`${origin}/dashboard`);
     }
 
     // Create developer profile using metadata from signup
@@ -155,8 +133,8 @@ async function handleUserProfileCreation(user: any, origin: string, next: string
       }
     }
 
-    // Redirect to next step
-    return NextResponse.redirect(`${origin}${next}?verified=true`);
+    // Redirect to dashboard
+    return NextResponse.redirect(`${origin}/dashboard?verified=true`);
 
   } catch (error) {
     console.error('Profile creation error:', error);

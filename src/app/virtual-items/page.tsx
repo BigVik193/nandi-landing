@@ -21,69 +21,6 @@ interface VirtualItem {
   color: string;
 }
 
-const initialVirtualItems: VirtualItem[] = [
-  {
-    id: 'gold_coins',
-    name: 'Gold Coins',
-    type: 'consumable',
-    subtype: 'currency',
-    description: 'Primary in-game currency for purchases and upgrades',
-    minPriceCents: 99,
-    maxPriceCents: 999,
-    priceTier: 1,
-    category: 'currency',
-    tags: ['currency', 'premium'],
-    metadata: {},
-    status: 'active',
-    color: 'bg-yellow-50 border-yellow-200'
-  },
-  {
-    id: 'rare_skins',
-    name: 'Rare Skins',
-    type: 'non_consumable',
-    subtype: 'item',
-    description: 'Character skins with rare rarity',
-    minPriceCents: 199,
-    maxPriceCents: 399,
-    priceTier: 2,
-    category: 'cosmetic',
-    tags: ['cosmetic', 'character'],
-    metadata: { rarity: 'rare' },
-    status: 'active',
-    color: 'bg-blue-50 border-blue-200'
-  },
-  {
-    id: 'epic_skins',
-    name: 'Epic Skins',
-    type: 'non_consumable',
-    subtype: 'item',
-    description: 'High-tier character skins with special effects',
-    minPriceCents: 499,
-    maxPriceCents: 999,
-    priceTier: 3,
-    category: 'cosmetic',
-    tags: ['cosmetic', 'character', 'effects'],
-    metadata: { rarity: 'epic', hasEffects: true },
-    status: 'active',
-    color: 'bg-indigo-50 border-indigo-200'
-  },
-  {
-    id: 'premium_pass',
-    name: 'Premium Battle Pass',
-    type: 'subscription',
-    subtype: 'other',
-    description: 'Monthly premium access with exclusive rewards',
-    minPriceCents: 999,
-    maxPriceCents: 999,
-    priceTier: 4,
-    category: 'subscription',
-    tags: ['subscription', 'premium', 'rewards'],
-    metadata: { duration: 'monthly', exclusive: true },
-    status: 'active',
-    color: 'bg-purple-50 border-purple-200'
-  }
-];
-
 const virtualItemColors = [
   'bg-yellow-50 border-yellow-200',
   'bg-blue-50 border-blue-200',
@@ -112,12 +49,11 @@ const getPriceFromTier = (tier: string) => {
 };
 
 export default function VirtualItemsPage() {
-  const { user } = useAuth();
-  const [virtualItems, setVirtualItems] = useState<VirtualItem[]>(initialVirtualItems);
+  const { user, games, selectedGame, selectGame } = useAuth();
+  const [virtualItems, setVirtualItems] = useState<VirtualItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [gameId, setGameId] = useState<string | null>(null);
   const [itemForm, setItemForm] = useState({
     name: '',
     type: 'consumable' as 'consumable' | 'non_consumable' | 'subscription',
@@ -132,14 +68,12 @@ export default function VirtualItemsPage() {
     status: 'active' as 'active' | 'inactive' | 'archived'
   });
 
-  // Load game data from onboarding
+  // Load virtual items when selectedGame is available
   useEffect(() => {
-    const onboardingData = JSON.parse(sessionStorage.getItem('onboardingData') || '{}');
-    if (onboardingData.gameId) {
-      setGameId(onboardingData.gameId);
-      loadVirtualItems(onboardingData.gameId);
+    if (selectedGame) {
+      loadVirtualItems(selectedGame.id);
     }
-  }, []);
+  }, [selectedGame]);
 
   const loadVirtualItems = async (gameId: string) => {
     setIsLoading(true);
@@ -150,7 +84,7 @@ export default function VirtualItemsPage() {
       if (response.ok) {
         // Convert database format to frontend format
         const formattedItems = data.virtualItems.map((item: any) => ({
-          id: item.id.toString(),
+          id: item.id,
           name: item.name,
           type: item.type,
           subtype: item.subtype,
@@ -213,7 +147,7 @@ export default function VirtualItemsPage() {
   };
 
   const saveVirtualItem = async () => {
-    if (!gameId) return;
+    if (!selectedGame) return;
 
     const parsePriceToCents = (price: string) => {
       const cleanPrice = price.replace(/[$,]/g, '');
@@ -246,7 +180,7 @@ export default function VirtualItemsPage() {
         });
 
         if (response.ok) {
-          await loadVirtualItems(gameId);
+          await loadVirtualItems(selectedGame.id);
         } else {
           const error = await response.json();
           alert('Error updating virtual item: ' + error.error);
@@ -259,15 +193,15 @@ export default function VirtualItemsPage() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            gameId,
+            gameId: selectedGame.id,
             ...itemData
           }),
         });
 
         if (response.ok) {
           const result = await response.json();
-          await loadVirtualItems(gameId);
-          setSelectedItem(result.virtualItem.id.toString());
+          await loadVirtualItems(selectedGame.id);
+          setSelectedItem(result.virtualItem.id);
         } else {
           const error = await response.json();
           alert('Error creating virtual item: ' + error.error);
@@ -284,7 +218,7 @@ export default function VirtualItemsPage() {
   };
 
   const deleteVirtualItem = async (itemId: string) => {
-    if (!gameId) return;
+    if (!selectedGame) return;
 
     if (confirm('Are you sure you want to delete this virtual item?')) {
       setIsLoading(true);
@@ -294,7 +228,7 @@ export default function VirtualItemsPage() {
         });
 
         if (response.ok) {
-          await loadVirtualItems(gameId);
+          await loadVirtualItems(selectedGame.id);
           if (selectedItem === itemId) {
             setSelectedItem(virtualItems[0]?.id || null);
           }
@@ -351,19 +285,52 @@ export default function VirtualItemsPage() {
         <div className="max-w-7xl mx-auto px-6">
           {/* Header */}
           <div className="mb-8">
-            <div className="flex items-center space-x-4 mb-4">
-              <button
-                onClick={() => window.history.back()}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <HiArrowLeft className="w-5 h-5 text-gray-600" />
-              </button>
-              <div>
-                <h1 className="text-3xl font-bold text-black">Virtual Items</h1>
-                <p className="text-gray-600 mt-1">Define your in-game virtual items and their pricing</p>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => window.history.back()}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <HiArrowLeft className="w-5 h-5 text-gray-600" />
+                </button>
+                <div>
+                  <h1 className="text-3xl font-bold text-black">Virtual Items</h1>
+                  <p className="text-gray-600 mt-1">Define your in-game virtual items and their pricing</p>
+                </div>
               </div>
+              {games.length > 1 && (
+                <select
+                  value={selectedGame?.id || ''}
+                  onChange={(e) => {
+                    const gameId = e.target.value;
+                    const game = games.find(g => g.id === gameId);
+                    if (game) selectGame(game);
+                  }}
+                  className="px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  {games.map((game) => (
+                    <option key={game.id} value={game.id}>
+                      {game.name} ({game.platform})
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
           </div>
+
+          {!selectedGame ? (
+            <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100 text-center">
+              <HiCube className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-bold text-gray-600 mb-2">Complete Setup First</h3>
+              <p className="text-sm text-gray-500 mb-4">Finish your onboarding to start managing virtual items.</p>
+              <button 
+                onClick={() => window.location.href = '/onboarding/project'}
+                className="bg-purple-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-purple-700 transition-colors inline-flex items-center space-x-2"
+              >
+                <span>Complete Setup</span>
+              </button>
+            </div>
+          ) : (
 
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Virtual Items List */}
@@ -427,20 +394,6 @@ export default function VirtualItemsPage() {
                     <h2 className="text-lg font-semibold text-black">
                       {selectedItem && virtualItems.find(item => item.id === selectedItem) ? 'Edit Virtual Item' : 'Add New Virtual Item'}
                     </h2>
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => setIsEditing(false)}
-                        className="p-2 text-gray-600 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                      >
-                        <HiX className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={saveVirtualItem}
-                        className="p-2 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-colors"
-                      >
-                        <HiCheck className="w-5 h-5" />
-                      </button>
-                    </div>
                   </div>
 
                   <div className="space-y-6">
@@ -608,6 +561,23 @@ export default function VirtualItemsPage() {
                         </div>
                       </div>
                     </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                      <button
+                        onClick={() => setIsEditing(false)}
+                        className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={saveVirtualItem}
+                        disabled={isLoading}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        {isLoading ? 'Saving...' : 'Save'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ) : selectedVirtualItem ? (
@@ -725,6 +695,7 @@ export default function VirtualItemsPage() {
               )}
             </div>
           </div>
+          )}
         </div>
       </div>
     </div>

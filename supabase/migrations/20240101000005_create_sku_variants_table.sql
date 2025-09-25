@@ -1,7 +1,7 @@
 -- Create sku_variants table
 create table if not exists public.sku_variants (
-  id bigint primary key generated always as identity,
-  virtual_item_id bigint not null references public.virtual_items(id) on delete cascade,
+  id uuid primary key default gen_random_uuid(),
+  virtual_item_id uuid not null references public.virtual_items(id) on delete cascade,
   app_store_product_id text not null, -- The actual product ID in App Store/Play Store
   price_cents bigint not null, -- Price in cents for consistency
   quantity bigint not null default 1, -- Quantity of the virtual item

@@ -1,6 +1,6 @@
 -- Create games table
 create table if not exists public.games (
-  id bigint primary key generated always as identity,
+  id uuid primary key default gen_random_uuid(),
   developer_id uuid not null references public.developers(id) on delete cascade,
   name text not null,
   bundle_id text not null, -- App Store/Play Store bundle identifier

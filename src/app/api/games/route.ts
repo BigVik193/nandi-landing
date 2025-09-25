@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
       .select('id')
       .eq('developer_id', developerId)
       .eq('name', gameTitle)
-      .single();
+      .maybeSingle();
 
     let gameId;
 

@@ -1,10 +1,10 @@
 -- Create purchases table
 create table if not exists public.purchases (
-  id bigint primary key generated always as identity,
-  player_id bigint not null references public.players(id) on delete cascade,
-  sku_variant_id bigint not null references public.sku_variants(id) on delete cascade,
-  experiment_id bigint references public.experiments(id) on delete set null,
-  experiment_arm_id bigint references public.experiment_arms(id) on delete set null,
+  id uuid primary key default gen_random_uuid(),
+  player_id uuid not null references public.players(id) on delete cascade,
+  sku_variant_id uuid not null references public.sku_variants(id) on delete cascade,
+  experiment_id uuid references public.experiments(id) on delete set null,
+  experiment_arm_id uuid references public.experiment_arms(id) on delete set null,
   transaction_id text not null, -- Platform transaction ID
   receipt_data text, -- Legacy receipt data (deprecated - use App Store Server API for Apple 2025)
   platform text not null check (platform in ('ios', 'android', 'both')),
