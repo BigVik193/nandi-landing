@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase/server';
 
 interface Event {
   id?: string;
@@ -58,22 +59,39 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // TODO: Store events in Supabase database
-    // For now, just log them
-    console.log(`[Events API] Received ${batch.events.length} events:`, {
-      batchTimestamp: batch.timestamp,
-      events: batch.events.map(event => ({
-        playerId: event.playerId,
-        eventType: event.eventType,
-        timestamp: event.timestamp,
-        properties: event.properties
-      }))
-    });
+    // Store events in Supabase database
+    const eventsToInsert = batch.events.map(event => ({
+      player_id: event.playerId,
+      session_id: event.sessionId || null,
+      event_type: event.eventType,
+      virtual_item_id: event.virtualItemId || null,
+      sku_variant_id: event.skuVariantId || null,
+      experiment_id: event.experimentId || null,
+      experiment_arm_id: event.experimentArmId || null,
+      properties: event.properties || {},
+      timestamp: event.timestamp
+    }));
+
+    const { data: insertedEvents, error: insertError } = await supabaseAdmin
+      .from('events')
+      .insert(eventsToInsert)
+      .select('id');
+
+    if (insertError) {
+      console.error('[Events API] Failed to insert events:', insertError);
+      return NextResponse.json(
+        { success: false, error: 'Failed to store events: ' + insertError.message },
+        { status: 500 }
+      );
+    }
+
+    console.log(`[Events API] Successfully stored ${insertedEvents?.length || 0} events`);
 
     return NextResponse.json({
       success: true,
       data: {
-        processed: batch.events.length,
+        processed: insertedEvents?.length || 0,
+        eventIds: insertedEvents?.map(event => event.id) || [],
         timestamp: new Date().toISOString()
       }
     });

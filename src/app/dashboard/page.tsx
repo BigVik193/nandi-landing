@@ -504,6 +504,13 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center space-x-3">
             <button 
+              onClick={() => window.location.href = '/docs/sdk'}
+              className="bg-indigo-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-indigo-600 transition-colors flex items-center space-x-2"
+            >
+              <HiCode className="w-4 h-4" />
+              <span>SDK Docs</span>
+            </button>
+            <button 
               onClick={() => {
                 if (selectedGame) {
                   window.location.href = `/games/${selectedGame.id}/virtual-items`;
