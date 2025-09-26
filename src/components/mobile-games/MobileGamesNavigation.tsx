@@ -1,10 +1,59 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 // Declare global function for TypeScript
 declare global {
   function gtag_report_conversion(url?: string): boolean;
+}
+
+function GetStartedButton({ className, onClick }: { className: string; onClick?: () => void }) {
+  const { session, loading } = useAuth();
+  const router = useRouter();
+  const [isNavigating, setIsNavigating] = useState(false);
+
+  const handleClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onClick) onClick();
+    
+    setIsNavigating(true);
+    
+    // Wait for auth context to finish loading if it's still loading
+    if (loading) {
+      // Auth context will handle routing once it's done loading
+      return;
+    }
+    
+    if (session) {
+      router.push('/dashboard');
+    } else {
+      router.push('/auth/signup');
+    }
+    
+    // Reset after a short delay
+    setTimeout(() => setIsNavigating(false), 1000);
+  };
+
+  const isLoading = loading || isNavigating;
+
+  return (
+    <button
+      onClick={handleClick}
+      className={className}
+      disabled={isLoading}
+    >
+      {isLoading ? (
+        <div className="flex items-center space-x-2">
+          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+          <span>Loading...</span>
+        </div>
+      ) : (
+        'Get Started'
+      )}
+    </button>
+  );
 }
 
 export default function Navigation() {
@@ -47,12 +96,9 @@ export default function Navigation() {
           >
             Get Early Access
           </a>
-          <a 
-            href="/auth/signup"
-            className="bg-white text-black border-2 border-black px-4 py-2 rounded-full font-medium text-base hover:bg-gray-50 transition-colors"
-          >
-            Get Started
-          </a>
+          <GetStartedButton 
+            className="bg-white text-black border-2 border-black px-4 py-2 rounded-full font-medium text-base hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          />
         </div>
 
         {/* Mobile Menu Button */}
@@ -94,13 +140,10 @@ export default function Navigation() {
               >
                 Get Early Access
               </a>
-              <a 
-                href="/auth/signup"
-                className="bg-white text-black border-2 border-black px-4 py-2 rounded-full font-medium text-center hover:bg-gray-50 transition-colors"
+              <GetStartedButton 
+                className="bg-white text-black border-2 border-black px-4 py-2 rounded-full font-medium text-center hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={() => setIsOpen(false)}
-              >
-                Get Started
-              </a>
+              />
             </div>
           </div>
         </div>

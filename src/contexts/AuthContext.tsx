@@ -42,7 +42,9 @@ interface AuthProviderProps {
 const PROTECTED_ROUTES = [
   '/dashboard',
   '/onboarding',
-  '/virtual-items'
+  '/games',
+  '/experiments',
+  '/api-keys'
 ];
 
 // Pages that should redirect authenticated users

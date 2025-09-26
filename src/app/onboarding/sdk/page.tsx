@@ -15,9 +15,17 @@ export default function SDKPage() {
   const handleNext = (data: any) => {
     // Store data in sessionStorage for persistence across pages
     const existingData = JSON.parse(sessionStorage.getItem('onboardingData') || '{}');
-    sessionStorage.setItem('onboardingData', JSON.stringify({ ...existingData, ...data }));
-    // window.location.href = '/onboarding/analytics'; // REMOVED: Analytics step
-    window.location.href = '/virtual-items'; // Go directly to virtual items definition
+    const updatedData = { ...existingData, ...data };
+    sessionStorage.setItem('onboardingData', JSON.stringify(updatedData));
+    
+    // Navigate to virtual items with the correct game ID
+    if (updatedData.gameId) {
+      window.location.href = `/games/${updatedData.gameId}/virtual-items`;
+    } else {
+      // Fallback if gameId is not available
+      console.error('No gameId found in onboarding data');
+      window.location.href = '/dashboard';
+    }
   };
 
   const handleBack = () => {
@@ -39,7 +47,14 @@ export default function SDKPage() {
                 ← Back
               </button>
               <button
-                onClick={() => window.location.href = '/virtual-items'}
+                onClick={() => {
+                  const data = JSON.parse(sessionStorage.getItem('onboardingData') || '{}');
+                  if (data.gameId) {
+                    window.location.href = `/games/${data.gameId}/virtual-items`;
+                  } else {
+                    window.location.href = '/dashboard';
+                  }
+                }}
                 className="bg-yellow-200 text-yellow-800 px-3 py-1 rounded text-sm font-medium hover:bg-yellow-300 transition-colors"
               >
                 Next →

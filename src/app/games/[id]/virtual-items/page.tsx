@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { HiCube, HiSparkles, HiCurrencyDollar, HiGift, HiArrowLeft, HiPlus, HiTrash, HiPencil, HiCheck, HiX } from 'react-icons/hi';
-import Navigation from '@/components/mobile-games/MobileGamesNavigation';
+import { HiCube, HiSparkles, HiCurrencyDollar, HiGift, HiArrowLeft, HiPlus, HiTrash, HiPencil, HiCheck, HiX, HiLogout, HiCog } from 'react-icons/hi';
 import { useAuth } from '@/contexts/AuthContext';
+import { useParams } from 'next/navigation';
 
 interface VirtualItem {
   id: string;
@@ -49,11 +49,18 @@ const getPriceFromTier = (tier: string) => {
 };
 
 export default function VirtualItemsPage() {
-  const { user, games, selectedGame, selectGame } = useAuth();
+  const { user, signOut } = useAuth();
+  const params = useParams();
+  const gameId = params.id as string;
+  
+  const [game, setGame] = useState<any>(null);
   const [virtualItems, setVirtualItems] = useState<VirtualItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [skuVariants, setSKUVariants] = useState<any[]>([]);
+  const [loadingSKUs, setLoadingSKUs] = useState(false);
+  const [gameLoading, setGameLoading] = useState(true);
   const [itemForm, setItemForm] = useState({
     name: '',
     type: 'consumable' as 'consumable' | 'non_consumable' | 'subscription',
@@ -68,22 +75,64 @@ export default function VirtualItemsPage() {
     status: 'active' as 'active' | 'inactive' | 'archived'
   });
 
-  // Load virtual items when selectedGame is available
+  // Load game and virtual items
   useEffect(() => {
-    if (selectedGame) {
-      loadVirtualItems(selectedGame.id);
+    if (user && gameId) {
+      loadGame();
     }
-  }, [selectedGame]);
+  }, [user, gameId]);
 
-  const loadVirtualItems = async (gameId: string) => {
+  useEffect(() => {
+    if (game) {
+      loadVirtualItems();
+    }
+  }, [game]);
+
+  // Fetch SKU variants when a virtual item is selected
+  useEffect(() => {
+    if (selectedItem && !isEditing) {
+      fetchSKUVariants(selectedItem);
+    } else {
+      setSKUVariants([]);
+    }
+  }, [selectedItem, isEditing, gameId]);
+
+  const loadGame = async () => {
+    setGameLoading(true);
+    try {
+      const response = await fetch(`/api/games/${gameId}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Verify the game belongs to the current user
+        if (data.game.developer_id !== user?.id) {
+          alert('You do not have access to this game');
+          window.location.href = '/dashboard';
+          return;
+        }
+        setGame(data.game);
+      } else {
+        alert('Game not found');
+        window.location.href = '/dashboard';
+      }
+    } catch (error) {
+      console.error('Error loading game:', error);
+      alert('Error loading game');
+      window.location.href = '/dashboard';
+    } finally {
+      setGameLoading(false);
+    }
+  };
+
+  const loadVirtualItems = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/virtual-items?gameId=${gameId}`);
+      const response = await fetch(`/api/games/${gameId}/virtual-items`);
       const data = await response.json();
       
       if (response.ok) {
         // Convert database format to frontend format
-        const formattedItems = data.virtualItems.map((item: any) => ({
+        const formattedItems = data.virtualItems.map((item: any, index: number) => ({
           id: item.id,
           name: item.name,
           type: item.type,
@@ -96,7 +145,7 @@ export default function VirtualItemsPage() {
           tags: item.tags || [],
           metadata: item.metadata || {},
           status: item.status,
-          color: virtualItemColors[data.virtualItems.indexOf(item) % virtualItemColors.length]
+          color: virtualItemColors[index % virtualItemColors.length]
         }));
         
         setVirtualItems(formattedItems);
@@ -108,6 +157,30 @@ export default function VirtualItemsPage() {
       console.error('Error loading virtual items:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchSKUVariants = async (virtualItemId: string) => {
+    if (!gameId || !virtualItemId) return;
+    
+    setLoadingSKUs(true);
+    try {
+      const response = await fetch(`/api/games/${gameId}/sku-variants?virtual_item_id=${virtualItemId}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Extract variants from the grouped response
+        const allVariants = data.virtual_items?.flatMap((item: any) => item.variants) || [];
+        setSKUVariants(allVariants);
+      } else {
+        console.error('Failed to fetch SKU variants:', data.error);
+        setSKUVariants([]);
+      }
+    } catch (error) {
+      console.error('Error fetching SKU variants:', error);
+      setSKUVariants([]);
+    } finally {
+      setLoadingSKUs(false);
     }
   };
 
@@ -147,7 +220,7 @@ export default function VirtualItemsPage() {
   };
 
   const saveVirtualItem = async () => {
-    if (!selectedGame) return;
+    if (!game) return;
 
     const parsePriceToCents = (price: string) => {
       const cleanPrice = price.replace(/[$,]/g, '');
@@ -171,7 +244,7 @@ export default function VirtualItemsPage() {
 
       if (selectedItem && virtualItems.find(item => item.id === selectedItem)) {
         // Update existing item
-        const response = await fetch(`/api/virtual-items/${selectedItem}`, {
+        const response = await fetch(`/api/games/${gameId}/virtual-items/${selectedItem}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -180,27 +253,24 @@ export default function VirtualItemsPage() {
         });
 
         if (response.ok) {
-          await loadVirtualItems(selectedGame.id);
+          await loadVirtualItems();
         } else {
           const error = await response.json();
           alert('Error updating virtual item: ' + error.error);
         }
       } else {
         // Create new item
-        const response = await fetch('/api/virtual-items', {
+        const response = await fetch(`/api/games/${gameId}/virtual-items`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            gameId: selectedGame.id,
-            ...itemData
-          }),
+          body: JSON.stringify(itemData),
         });
 
         if (response.ok) {
           const result = await response.json();
-          await loadVirtualItems(selectedGame.id);
+          await loadVirtualItems();
           setSelectedItem(result.virtualItem.id);
         } else {
           const error = await response.json();
@@ -218,17 +288,17 @@ export default function VirtualItemsPage() {
   };
 
   const deleteVirtualItem = async (itemId: string) => {
-    if (!selectedGame) return;
+    if (!game) return;
 
     if (confirm('Are you sure you want to delete this virtual item?')) {
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/virtual-items/${itemId}`, {
+        const response = await fetch(`/api/games/${gameId}/virtual-items/${itemId}`, {
           method: 'DELETE',
         });
 
         if (response.ok) {
-          await loadVirtualItems(selectedGame.id);
+          await loadVirtualItems();
           if (selectedItem === itemId) {
             setSelectedItem(virtualItems[0]?.id || null);
           }
@@ -277,60 +347,75 @@ export default function VirtualItemsPage() {
     }));
   };
 
+  if (gameLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading game...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!game) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Game not found</h2>
+            <button
+              onClick={() => window.location.href = '/dashboard'}
+              className="bg-black text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-800 transition-colors"
+            >
+              Back to Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
-      
-      <div className="pt-20 pb-8">
+      <div className="pt-8 pb-8">
         <div className="max-w-7xl mx-auto px-6">
           {/* Header */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-4">
                 <button
-                  onClick={() => window.history.back()}
+                  onClick={() => window.location.href = '/dashboard'}
                   className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 >
                   <HiArrowLeft className="w-5 h-5 text-gray-600" />
                 </button>
                 <div>
                   <h1 className="text-3xl font-bold text-black">Virtual Items</h1>
-                  <p className="text-gray-600 mt-1">Define your in-game virtual items and their pricing</p>
+                  <p className="text-gray-600 mt-1">
+                    Managing items for: <span className="font-medium">{game.name}</span>
+                  </p>
                 </div>
               </div>
-              {games.length > 1 && (
-                <select
-                  value={selectedGame?.id || ''}
-                  onChange={(e) => {
-                    const gameId = e.target.value;
-                    const game = games.find(g => g.id === gameId);
-                    if (game) selectGame(game);
-                  }}
-                  className="px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => window.location.href = '/dashboard'}
+                  className="px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
                 >
-                  {games.map((game) => (
-                    <option key={game.id} value={game.id}>
-                      {game.name} ({game.platform})
-                    </option>
-                  ))}
-                </select>
-              )}
+                  Dashboard
+                </button>
+                <button
+                  onClick={signOut}
+                  className="px-4 py-2 bg-gray-600 text-white rounded-lg font-medium hover:bg-gray-700 transition-colors flex items-center space-x-2"
+                >
+                  <HiLogout className="w-4 h-4" />
+                  <span>Sign Out</span>
+                </button>
+              </div>
             </div>
           </div>
-
-          {!selectedGame ? (
-            <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100 text-center">
-              <HiCube className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-bold text-gray-600 mb-2">Complete Setup First</h3>
-              <p className="text-sm text-gray-500 mb-4">Finish your onboarding to start managing virtual items.</p>
-              <button 
-                onClick={() => window.location.href = '/onboarding/project'}
-                className="bg-purple-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-purple-700 transition-colors inline-flex items-center space-x-2"
-              >
-                <span>Complete Setup</span>
-              </button>
-            </div>
-          ) : (
 
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Virtual Items List */}
@@ -677,6 +762,70 @@ export default function VirtualItemsPage() {
                         VirtualItem.{selectedVirtualItem.id}
                       </code>
                     </div>
+
+                    {/* SKU Variants Section */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-md font-medium text-blue-900">App Store SKU Variants</h3>
+                        {loadingSKUs && (
+                          <div className="text-sm text-blue-600">Loading variants...</div>
+                        )}
+                      </div>
+                      
+                      {skuVariants.length > 0 ? (
+                        <div className="space-y-2">
+                          <p className="text-sm text-blue-700 mb-3">
+                            {skuVariants.length} SKU variant{skuVariants.length > 1 ? 's' : ''} created for A/B testing:
+                          </p>
+                          <div className="grid gap-2">
+                            {skuVariants.map((variant, index) => (
+                              <div key={variant.id} className="bg-white border border-blue-200 rounded p-3 text-sm">
+                                <div className="flex justify-between items-center">
+                                  <div className="font-medium text-gray-900">
+                                    {variant.name || `Variant ${index + 1}`}
+                                  </div>
+                                  <div className="text-right">
+                                    <div className="font-semibold text-green-600">
+                                      ${(variant.price_cents / 100).toFixed(2)}
+                                    </div>
+                                    {variant.quantity > 1 && (
+                                      <div className="text-xs text-gray-500">
+                                        {variant.quantity}x quantity
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="text-xs text-gray-500 mt-1">
+                                  Product ID: {variant.app_store_product_id}
+                                </div>
+                                <div className="flex justify-between items-center mt-1">
+                                  <div className={`text-xs px-2 py-0.5 rounded ${
+                                    variant.status === 'active' ? 'bg-green-100 text-green-700' :
+                                    variant.status === 'inactive' ? 'bg-yellow-100 text-yellow-700' :
+                                    'bg-gray-100 text-gray-600'
+                                  }`}>
+                                    {variant.status}
+                                  </div>
+                                  <div className="text-xs text-gray-400">
+                                    {new Date(variant.created_at).toLocaleDateString()}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-center py-6">
+                          <HiCog className="w-8 h-8 text-blue-300 mx-auto mb-2" />
+                          <p className="text-sm text-blue-700 mb-2">
+                            No SKU variants created yet
+                          </p>
+                          <p className="text-xs text-blue-600">
+                            SKU variants will be automatically generated when you start A/B testing
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -695,7 +844,6 @@ export default function VirtualItemsPage() {
               )}
             </div>
           </div>
-          )}
         </div>
       </div>
     </div>

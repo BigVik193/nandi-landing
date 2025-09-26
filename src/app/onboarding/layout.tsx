@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Navigation from '@/components/mobile-games/MobileGamesNavigation';
+import { useAuth } from '@/contexts/AuthContext';
+import { HiLogout } from 'react-icons/hi';
 
 interface OnboardingLayoutProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ const steps = [
 ];
 
 export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
+  const { signOut } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
@@ -33,10 +35,32 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
-      
+      {/* Top Navigation */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-4xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl font-bold text-black">Setup Your Game</h1>
+            <div className="flex space-x-3">
+              <button
+                onClick={() => window.location.href = '/dashboard'}
+                className="px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={signOut}
+                className="px-4 py-2 bg-gray-600 text-white rounded-lg font-medium hover:bg-gray-700 transition-colors flex items-center space-x-2"
+              >
+                <HiLogout className="w-4 h-4" />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Progress Header */}
-      <div className="bg-white border-b border-gray-200 pt-20">
+      <div className="bg-gray-50 border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-6 py-6">
           {/* Progress Bar */}
           <div className="mb-6">

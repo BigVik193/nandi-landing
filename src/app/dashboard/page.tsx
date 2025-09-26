@@ -158,6 +158,8 @@ export default function DashboardPage() {
   const [showSDKIntegration, setShowSDKIntegration] = useState(false);
   const [apiKeys, setApiKeys] = useState<any[]>([]);
   const [loadingApiKeys, setLoadingApiKeys] = useState(true);
+  const [analytics, setAnalytics] = useState<any>(null);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(true);
   
   // Use the first API key for code examples, or fallback to mock
   const userApiKey = apiKeys.length > 0 ? apiKeys[0].key_prefix.replace('...', 'abc123def456') : "nandi_prod_2024_abc123def456";
@@ -197,6 +199,33 @@ export default function DashboardPage() {
 
     fetchApiKeys();
   }, [user, selectedGame]);
+
+  // Fetch analytics data
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      if (!selectedGame) return;
+      
+      setLoadingAnalytics(true);
+      try {
+        const response = await fetch(`/api/games/${selectedGame.id}/analytics?timeframe=${timeframe}`);
+        
+        if (response.ok) {
+          const data = await response.json();
+          setAnalytics(data.analytics);
+        } else {
+          console.error('Failed to fetch analytics:', response.statusText);
+          setAnalytics(null);
+        }
+      } catch (error) {
+        console.error('Failed to fetch analytics:', error);
+        setAnalytics(null);
+      } finally {
+        setLoadingAnalytics(false);
+      }
+    };
+
+    fetchAnalytics();
+  }, [selectedGame, timeframe]);
 
   // Delete API key
   const handleDeleteApiKey = async (apiKeyId: string, name: string) => {
@@ -337,7 +366,20 @@ export default function DashboardPage() {
   };
 
   const formatPercent = (value: number) => {
+    if (value === 0) return '0.0%';
     return `${value > 0 ? '+' : ''}${value.toFixed(1)}%`;
+  };
+
+  const getChangeColor = (value: number) => {
+    if (value > 0) return 'text-green-500';
+    if (value < 0) return 'text-red-500';
+    return 'text-gray-500';
+  };
+
+  const getChangeIcon = (value: number) => {
+    if (value > 0) return <HiTrendingUp className="w-4 h-4 text-green-500" />;
+    if (value < 0) return <HiTrendingDown className="w-4 h-4 text-red-500" />;
+    return <HiTrendingUp className="w-4 h-4 text-gray-500" />;
   };
 
   const getStatusIcon = (status: string) => {
@@ -383,27 +425,41 @@ export default function DashboardPage() {
 
   const selectedExperimentData = experiments.find(exp => exp.id === selectedExperiment);
 
-  // Calculate aggregate metrics from all experiments
-  const aggregateMetrics = experiments.reduce(
-    (acc, exp) => {
-      // This is a simplified calculation - in a real app you'd fetch this from analytics
-      const estimatedRevenue = Math.random() * 5000;
-      const estimatedConversion = 3 + Math.random() * 10;
-      const estimatedUsers = Math.floor(Math.random() * 2000) + 500;
-      
-      acc.revenue += estimatedRevenue;
-      acc.conversionRate += estimatedConversion;
-      acc.users += estimatedUsers;
-      
-      return acc;
-    },
-    { revenue: 0, conversionRate: 0, users: 0 }
-  );
+  // Use real analytics data or fallback to defaults
+  const aggregateMetrics = analytics ? {
+    revenue: analytics.overview.revenue,
+    revenueChange: analytics.overview.revenueChange,
+    conversionRate: analytics.overview.conversionRate,
+    conversionRateChange: analytics.overview.conversionRateChange,
+    users: analytics.overview.activeUsers,
+    usersChange: analytics.overview.activeUsersChange,
+    arpu: analytics.overview.arpu
+  } : {
+    revenue: 0,
+    revenueChange: 0,
+    conversionRate: 0,
+    conversionRateChange: 0,
+    users: 0,
+    usersChange: 0,
+    arpu: 0
+  };
 
-  // Normalize conversion rate by number of experiments
-  if (experiments.length > 0) {
-    aggregateMetrics.conversionRate = aggregateMetrics.conversionRate / experiments.length;
-  }
+  // Recent activity data
+  const recentActivity = analytics ? {
+    storeViews: analytics.recentActivity.storeViews,
+    storeViewsChange: analytics.recentActivity.storeViewsChange,
+    itemViews: analytics.recentActivity.itemViews,
+    itemViewsChange: analytics.recentActivity.itemViewsChange,
+    activeExperiments: analytics.recentActivity.activeExperiments,
+    purchases: analytics.recentActivity.purchases
+  } : {
+    storeViews: 0,
+    storeViewsChange: 0,
+    itemViews: 0,
+    itemViewsChange: 0,
+    activeExperiments: experiments.filter(exp => exp.status === 'running').length,
+    purchases: 0
+  };
 
   return (
     <div className="h-screen bg-gray-50 overflow-y-auto">
@@ -411,31 +467,66 @@ export default function DashboardPage() {
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <h1 className="text-3xl font-bold text-black">Experiments Dashboard</h1>
-            {games.length > 1 && (
+            <h1 className="text-3xl font-bold text-black">Dashboard</h1>
+            <div className="flex items-center space-x-3">
               <select
                 value={selectedGame?.id || ''}
                 onChange={(e) => {
                   const gameId = e.target.value;
-                  const game = games.find(g => g.id === gameId);
-                  if (game) selectGame(game);
+                  if (gameId === 'onboard') {
+                    window.location.href = '/onboarding/project';
+                  } else {
+                    const game = games.find(g => g.id === gameId);
+                    if (game) selectGame(game);
+                  }
                 }}
-                className="px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="px-4 py-3 border-2 border-gray-200 rounded-xl bg-white text-gray-900 font-medium shadow-sm hover:border-gray-300 focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 min-w-56 appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDEuNUw2IDYuNUwxMSAxLjUiIHN0cm9rZT0iIzZCNzI4MCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==')] bg-no-repeat bg-[length:16px_10px] bg-[right_16px_center]"
               >
+                {games.length === 0 ? (
+                  <option value="" disabled className="text-gray-500">
+                    No games yet
+                  </option>
+                ) : (
+                  <option value="" disabled className="text-gray-500">
+                    Select a game
+                  </option>
+                )}
                 {games.map((game) => (
-                  <option key={game.id} value={game.id}>
-                    {game.name} ({game.platform})
+                  <option key={game.id} value={game.id} className="py-2">
+                    🎮 {game.name}
                   </option>
                 ))}
+                <option value="onboard" className="font-semibold text-black py-2" style={{borderTop: '1px solid #e5e7eb'}}>
+                  ✨ Add New Game
+                </option>
               </select>
-            )}
+            </div>
           </div>
           <div className="flex items-center space-x-3">
             <button 
-              onClick={() => window.location.href = '/virtual-items'}
+              onClick={() => {
+                if (selectedGame) {
+                  window.location.href = `/games/${selectedGame.id}/virtual-items`;
+                } else {
+                  alert('Please select a game first');
+                }
+              }}
               className="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-600 transition-colors"
             >
               Manage Virtual Items
+            </button>
+            <button 
+              onClick={() => {
+                if (selectedGame) {
+                  window.location.href = `/games/${selectedGame.id}/store-config`;
+                } else {
+                  alert('Please select a game first');
+                }
+              }}
+              className="bg-gray-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-700 transition-colors flex items-center space-x-2"
+            >
+              <span>🏪</span>
+              <span>Store Config</span>
             </button>
             <button 
               onClick={() => alert('Create experiment functionality will be added in the next iteration')}
@@ -493,13 +584,15 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 font-medium">Total Revenue</p>
-                    <p className="text-2xl font-bold text-black">{formatCurrency(aggregateMetrics.revenue * 100)}</p>
+                    <p className="text-2xl font-bold text-black">{formatCurrency(aggregateMetrics.revenue)}</p>
                   </div>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <HiTrendingUp className="w-4 h-4 text-green-500" />
-                <span className="text-sm font-medium text-green-500">+12.3% vs last month</span>
+                {getChangeIcon(aggregateMetrics.revenueChange)}
+                <span className={`text-sm font-medium ${getChangeColor(aggregateMetrics.revenueChange)}`}>
+                  {formatPercent(aggregateMetrics.revenueChange)} vs last period
+                </span>
               </div>
             </div>
 
@@ -517,8 +610,10 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <HiTrendingUp className="w-4 h-4 text-green-500" />
-                <span className="text-sm font-medium text-green-500">+8.7% vs last month</span>
+                {getChangeIcon(aggregateMetrics.conversionRateChange)}
+                <span className={`text-sm font-medium ${getChangeColor(aggregateMetrics.conversionRateChange)}`}>
+                  {formatPercent(aggregateMetrics.conversionRateChange)} vs last period
+                </span>
               </div>
             </div>
 
@@ -536,8 +631,10 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <HiTrendingUp className="w-4 h-4 text-green-500" />
-                <span className="text-sm font-medium text-green-500">+5.2% vs last month</span>
+                {getChangeIcon(aggregateMetrics.usersChange)}
+                <span className={`text-sm font-medium ${getChangeColor(aggregateMetrics.usersChange)}`}>
+                  {formatPercent(aggregateMetrics.usersChange)} vs last period
+                </span>
               </div>
             </div>
           </div>
@@ -556,14 +653,16 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <h3 className="font-bold text-black">Store Views</h3>
-                    <p className="text-sm text-gray-600">Last 24 hours</p>
+                    <p className="text-sm text-gray-600">Last {timeframe === '7d' ? '7 days' : timeframe === '30d' ? '30 days' : '90 days'}</p>
                   </div>
                 </div>
-                <p className="text-3xl font-bold text-black mb-2">1,247</p>
+                <p className="text-3xl font-bold text-black mb-2">{recentActivity.storeViews.toLocaleString()}</p>
                 <div className="flex items-center space-x-1">
-                  <HiTrendingUp className="w-4 h-4 text-green-500" />
-                  <span className="text-sm font-medium text-green-500">+15.3%</span>
-                  <span className="text-sm text-gray-500">vs yesterday</span>
+                  {getChangeIcon(recentActivity.storeViewsChange)}
+                  <span className={`text-sm font-medium ${getChangeColor(recentActivity.storeViewsChange)}`}>
+                    {formatPercent(recentActivity.storeViewsChange)}
+                  </span>
+                  <span className="text-sm text-gray-500">vs previous period</span>
                 </div>
               </div>
 
@@ -575,14 +674,16 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <h3 className="font-bold text-black">Item Views</h3>
-                    <p className="text-sm text-gray-600">Last 24 hours</p>
+                    <p className="text-sm text-gray-600">Last {timeframe === '7d' ? '7 days' : timeframe === '30d' ? '30 days' : '90 days'}</p>
                   </div>
                 </div>
-                <p className="text-3xl font-bold text-black mb-2">823</p>
+                <p className="text-3xl font-bold text-black mb-2">{recentActivity.itemViews.toLocaleString()}</p>
                 <div className="flex items-center space-x-1">
-                  <HiTrendingUp className="w-4 h-4 text-green-500" />
-                  <span className="text-sm font-medium text-green-500">+8.7%</span>
-                  <span className="text-sm text-gray-500">vs yesterday</span>
+                  {getChangeIcon(recentActivity.itemViewsChange)}
+                  <span className={`text-sm font-medium ${getChangeColor(recentActivity.itemViewsChange)}`}>
+                    {formatPercent(recentActivity.itemViewsChange)}
+                  </span>
+                  <span className="text-sm text-gray-500">vs previous period</span>
                 </div>
               </div>
 
@@ -598,7 +699,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
                 <p className="text-3xl font-bold text-black mb-2">
-                  {experiments.filter(exp => exp.status === 'running').length}
+                  {recentActivity.activeExperiments}
                 </p>
                 <p className="text-sm text-gray-500">
                   {experiments.length} total experiments
@@ -833,7 +934,7 @@ export default function DashboardPage() {
                               </div>
                               <div className="text-center p-3 bg-purple-50 rounded-lg border border-purple-200">
                                 <p className="text-xs text-purple-600 font-medium">Purchase Rate</p>
-                                <p className="text-lg font-bold text-purple-700">{result.conversionRate.toFixed(1)}%</p>
+                                <p className="text-lg font-bold text-purple-700">{(result.conversionRate || 0).toFixed(1)}%</p>
                               </div>
                               <div className="text-center p-3 bg-green-50 rounded-lg border border-green-200">
                                 <p className="text-xs text-green-600 font-medium">ARPU</p>
