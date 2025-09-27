@@ -12,16 +12,13 @@ export function ApiReferenceSection() {
           name="new NandiSDK(config)"
           description="Creates a new instance of the SDK."
           parameters={[
-            { name: 'apiKey', type: 'string', description: 'Your Nandi API key', required: true },
-            { name: 'gameId', type: 'string', description: 'Your game\'s unique identifier', required: true },
-            { name: 'baseUrl', type: 'string', description: 'API endpoint (defaults to production)' },
-            { name: 'debug', type: 'boolean', description: 'Enable debug logging' }
+            { name: 'apiKey', type: 'string', description: 'Your Nandi API key (contains game identification)', required: true },
+            { name: 'baseUrl', type: 'string', description: 'API endpoint (defaults to production - rarely needed)' },
+            { name: 'debug', type: 'boolean', description: 'Enable debug logging for development' }
           ]}
           example={{
             code: `const nandi = new NandiSDK({
-  apiKey: 'your_api_key',
-  gameId: 'your_game_id',
-  debug: true
+  apiKey: 'your_api_key'
 });`
           }}
         />
@@ -117,8 +114,12 @@ console.log(variant.variant.quantity);        // 100`
           parameters={[
             { name: 'properties', type: 'object', description: 'Additional event properties' }
           ]}
+          returnType={{
+            type: 'void',
+            description: 'Synchronous method that queues the event'
+          }}
           example={{
-            code: `await nandi.trackStoreView({
+            code: `nandi.trackStoreView({
   source: 'level_complete'
 });`
           }}
@@ -131,10 +132,33 @@ console.log(variant.variant.quantity);        // 100`
             { name: 'itemId', type: 'string', description: 'Virtual item ID', required: true },
             { name: 'properties', type: 'object', description: 'Additional event properties' }
           ]}
+          returnType={{
+            type: 'void',
+            description: 'Synchronous method that queues the event'
+          }}
           example={{
-            code: `await nandi.trackItemView('coins_pack', {
+            code: `nandi.trackItemView('coins_pack', {
   position: 1,
   category: 'currency'
+});`
+          }}
+        />
+
+        <ApiMethod
+          name="trackItemClick(variant, properties?)"
+          description="Convenience method for tracking item clicks with experiment context."
+          parameters={[
+            { name: 'variant', type: 'ItemVariantResponse', description: 'The variant being clicked', required: true },
+            { name: 'properties', type: 'object', description: 'Additional click properties' }
+          ]}
+          returnType={{
+            type: 'Promise<LogEventResponse>',
+            description: 'Confirmation of logged event'
+          }}
+          example={{
+            code: `await nandi.trackItemClick(variant, {
+  ui_element: 'store_button',
+  screen: 'main_store'
 });`
           }}
         />

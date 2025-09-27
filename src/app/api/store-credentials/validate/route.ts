@@ -59,7 +59,7 @@ async function createAppleStoreJWT(
 // Helper function to validate Apple Store credentials by calling their API
 async function validateAppleStoreCredentials(
   credentials: AppleStoreCredentials
-): Promise<{ valid: boolean; error?: string; apps?: any[] }> {
+): Promise<{ valid: boolean; error?: string; apps?: any[]; matched_app?: any; total_apps_in_account?: number }> {
   console.log('[Apple] Validating credentials for:', credentials.app_name, credentials.bundle_id);
   
   try {
@@ -93,7 +93,7 @@ async function validateAppleStoreCredentials(
     
     // Check if the bundle ID exists in the apps
     console.log('[Apple] Searching for bundle ID:', credentials.bundle_id);
-    console.log('[Apple] Available apps:', apps.map(app => ({ 
+    console.log('[Apple] Available apps:', apps.map((app: any) => ({ 
       id: app.id, 
       name: app.attributes?.name, 
       bundleId: app.attributes?.bundleId 

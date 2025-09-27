@@ -17,9 +17,8 @@ export function IntegrationGuideSection() {
 class GameStore {
   constructor() {
     this.nandi = new NandiSDK({
-      apiKey: process.env.NANDI_API_KEY,
-      gameId: process.env.NANDI_GAME_ID,
-      debug: true
+      apiKey: process.env.NANDI_API_KEY
+      // debug: true // Enable for development
     });
   }
 
@@ -33,8 +32,8 @@ class GameStore {
   }
 
   async loadStoreItems() {
-    // Track store view
-    await this.nandi.trackStoreView({
+    // Track store view - fire and forget for performance
+    this.nandi.trackStoreView({
       source: 'main_menu',
       items_count: this.items.length
     });
@@ -48,8 +47,8 @@ class GameStore {
         variant
       });
 
-      // Track item view
-      await this.nandi.trackItemView(item.id, {
+      // Track item view - fire and forget for performance
+      this.nandi.trackItemView(item.id, {
         position: variants.length,
         experimentId: variant.experimentId
       });

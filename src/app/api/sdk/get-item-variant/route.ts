@@ -1,60 +1,49 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { BanditService } from '@/lib/bandit/bandit-service';
 import { supabaseAdmin } from '@/lib/supabase/server';
+import { getAuthInfo, createUnauthorizedResponse } from '@/lib/auth/api-key-utils';
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate API key and get game ID
+    const authInfo = await getAuthInfo(request);
+    if (!authInfo.isValid) {
+      return createUnauthorizedResponse(authInfo.error || 'Invalid API key');
+    }
+
     const body = await request.json();
     const { 
-      gameId, 
-      virtualItemId, 
-      virtualItemName,
+      itemId, // Developer-friendly itemId
       userId,
-      platform = 'both',
-      apiKey 
+      platform = 'both'
     } = body;
 
-    // Basic validation
-    if (!gameId) {
+    const gameId = authInfo.gameId;
+
+    if (!itemId) {
       return NextResponse.json(
-        { error: 'gameId is required' },
+        { error: 'itemId is required' },
         { status: 400 }
       );
     }
 
-    if (!virtualItemId && !virtualItemName) {
+    // Resolve itemId to virtual item UUID using game_id + item_id
+    const { data: virtualItem } = await supabaseAdmin
+      .from('virtual_items')
+      .select('id, name, item_id')
+      .eq('game_id', gameId)
+      .eq('item_id', itemId)
+      .eq('status', 'active')
+      .maybeSingle();
+
+    if (!virtualItem) {
       return NextResponse.json(
-        { error: 'Either virtualItemId or virtualItemName is required' },
-        { status: 400 }
+        { error: `Virtual item with itemId '${itemId}' not found in game` },
+        { status: 404 }
       );
     }
 
-    // TODO: Validate API key in production
-    // if (!apiKey) {
-    //   return NextResponse.json({ error: 'API key required' }, { status: 401 });
-    // }
-
-    let resolvedVirtualItemId = virtualItemId;
-
-    // If only name provided, resolve to ID
-    if (!virtualItemId && virtualItemName) {
-      const { data: virtualItem } = await supabaseAdmin
-        .from('virtual_items')
-        .select('id')
-        .eq('game_id', gameId)
-        .eq('name', virtualItemName)
-        .eq('status', 'active')
-        .maybeSingle();
-
-      if (!virtualItem) {
-        return NextResponse.json(
-          { error: `Virtual item '${virtualItemName}' not found in game` },
-          { status: 404 }
-        );
-      }
-
-      resolvedVirtualItemId = virtualItem.id;
-    }
+    const resolvedVirtualItemId = virtualItem.id;
 
     // Step 1: Check if there's a running experiment for this virtual item
     const { data: runningExperiments } = await supabaseAdmin
@@ -124,13 +113,13 @@ export async function POST(request: NextRequest) {
                                          null;
 
       return NextResponse.json({
-        virtualItemId: resolvedVirtualItemId,
+        virtualItemId: resolvedVirtualItemId, // Internal UUID for backend use
+        itemId: virtualItem.item_id, // Developer-friendly ID for SDK use
         experimentId: null,
         experimentArmId: null,
         variant: {
           skuVariantId: defaultSkuVariant.id,
           productId: defaultSkuVariant.app_store_product_id,
-          appStoreProductId: defaultSkuVariant.app_store_product_id, // Backward compatibility
           price: {
             cents: defaultSkuVariant.price_cents,
             dollars: defaultSkuVariant.price_cents / 100,
@@ -149,25 +138,6 @@ export async function POST(request: NextRequest) {
           userId,
           platform,
           timestamp: new Date().toISOString()
-        },
-        instructions: {
-          displayInstructions: [
-            `Display "${defaultSkuVariant.quantity}" units for "${`$${(defaultSkuVariant.price_cents / 100).toFixed(2)}`}"`,
-            platform === 'ios' 
-              ? `Use iOS Product Identifier: "${defaultSkuVariant.app_store_product_id}" for StoreKit`
-              : platform === 'android'
-              ? `Use Android Product ID: "${defaultSkuVariant.app_store_product_id}" for Play Billing`
-              : `Use Product ID: "${defaultSkuVariant.app_store_product_id}" for purchase`
-          ],
-          platformInstructions: platform === 'ios' ? [
-            'Use StoreKit 2 for purchase flow',
-            'Product ID format follows reverse domain naming'
-          ] : platform === 'android' ? [
-            'Use Google Play Billing Library for purchase flow', 
-            'Product ID is lowercase only with specific character restrictions'
-          ] : [
-            'Use platform-appropriate billing system'
-          ]
         }
       });
     }
@@ -289,15 +259,15 @@ export async function POST(request: NextRequest) {
                                null;
 
     return NextResponse.json({
-      virtualItemId: resolvedVirtualItemId,
+      virtualItemId: resolvedVirtualItemId, // Internal UUID for backend use
+      itemId: virtualItem.item_id, // Developer-friendly ID for SDK use
       experimentId: experiment.id,
       experimentName: experiment.name,
       experimentArmId: selectedArmId,
       experimentArmName: selectedArm.name,
       variant: {
         skuVariantId: skuVariant.id,
-        productId: skuVariant.app_store_product_id, // Universal field name
-        appStoreProductId: skuVariant.app_store_product_id, // Backward compatibility
+        productId: skuVariant.app_store_product_id,
         price: {
           cents: skuVariant.price_cents,
           dollars: skuVariant.price_cents / 100,
@@ -319,34 +289,6 @@ export async function POST(request: NextRequest) {
         userId,
         platform,
         timestamp: new Date().toISOString()
-      },
-      instructions: {
-        displayInstructions: [
-          `Display "${skuVariant.quantity}" units for "${`$${(skuVariant.price_cents / 100).toFixed(2)}`}"`,
-          platform === 'ios' 
-            ? `Use iOS Product Identifier: "${skuVariant.app_store_product_id}" for StoreKit`
-            : platform === 'android'
-            ? `Use Android Product ID: "${skuVariant.app_store_product_id}" for Play Billing`
-            : `Use Product ID: "${skuVariant.app_store_product_id}" for purchase`
-        ],
-        platformInstructions: platform === 'ios' ? [
-          'Use StoreKit 2 for purchase flow',
-          'Product ID format follows reverse domain naming',
-          'Handle transaction verification with App Store Server API'
-        ] : platform === 'android' ? [
-          'Use Google Play Billing Library for purchase flow', 
-          'Product ID is lowercase only with specific character restrictions',
-          'Acknowledge purchases after verification to avoid refunds'
-        ] : [
-          'Use platform-appropriate billing system',
-          'Follow platform-specific product ID formats'
-        ],
-        trackingInstructions: [
-          'Log store_view event when item is displayed to user',
-          'Log purchase_complete event when purchase is verified by your colleague\'s system',
-          'Include experiment_id and experiment_arm_id in all events',
-          'Platform will be automatically detected and logged'
-        ]
       }
     });
 
@@ -363,24 +305,21 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const gameId = searchParams.get('gameId');
-    const virtualItemId = searchParams.get('virtualItemId');
-    const virtualItemName = searchParams.get('virtualItemName');
+    const itemId = searchParams.get('itemId'); // Now using itemId
     const userId = searchParams.get('userId');
     const platform = searchParams.get('platform') || 'both';
-    const apiKey = searchParams.get('apiKey');
 
     return POST(new NextRequest(request.url, {
       method: 'POST',
       body: JSON.stringify({
-        gameId,
-        virtualItemId,
-        virtualItemName,
+        itemId, // Using itemId instead of virtualItemId/virtualItemName
         userId,
-        platform,
-        apiKey
+        platform
       }),
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': request.headers.get('Authorization') || ''
+      }
     }));
 
   } catch (error) {

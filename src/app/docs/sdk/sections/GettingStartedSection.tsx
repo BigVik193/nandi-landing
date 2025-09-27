@@ -36,10 +36,8 @@ export function GettingStartedSection() {
           code={`import NandiSDK from '@nandi/sdk';
 
 const nandi = new NandiSDK({
-  apiKey: 'your_api_key_here',
-  gameId: 'your_game_id',
-  baseUrl: 'https://api.nandi.dev', // Optional: defaults to production
-  debug: true // Optional: enables debug logging
+  apiKey: 'your_api_key_here'
+  // debug: true // Optional: enables debug logging for development
 });
 
 // Initialize with player identification

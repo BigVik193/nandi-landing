@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation';
 
 interface VirtualItem {
   id: string;
+  itemId: string; // Developer-friendly ID for SDK use
   name: string;
   type: 'consumable' | 'non_consumable' | 'subscription';
   subtype?: 'currency' | 'item' | 'resource' | 'other';
@@ -62,6 +63,7 @@ export default function VirtualItemsPage() {
   const [loadingSKUs, setLoadingSKUs] = useState(false);
   const [gameLoading, setGameLoading] = useState(true);
   const [itemForm, setItemForm] = useState({
+    itemId: '',
     name: '',
     type: 'consumable' as 'consumable' | 'non_consumable' | 'subscription',
     subtype: 'currency' as 'currency' | 'item' | 'resource' | 'other',
@@ -134,6 +136,7 @@ export default function VirtualItemsPage() {
         // Convert database format to frontend format
         const formattedItems = data.virtualItems.map((item: any, index: number) => ({
           id: item.id,
+          itemId: item.item_id || '', // Add item_id field
           name: item.name,
           type: item.type,
           subtype: item.subtype,
@@ -189,6 +192,7 @@ export default function VirtualItemsPage() {
   const startEditing = (item?: VirtualItem) => {
     if (item) {
       setItemForm({
+        itemId: item.itemId,
         name: item.name,
         type: item.type,
         subtype: item.subtype || 'currency',
@@ -203,6 +207,7 @@ export default function VirtualItemsPage() {
       });
     } else {
       setItemForm({
+        itemId: '',
         name: '',
         type: 'consumable',
         subtype: 'currency',
@@ -230,6 +235,7 @@ export default function VirtualItemsPage() {
     setIsLoading(true);
     try {
       const itemData = {
+        itemId: itemForm.itemId,
         name: itemForm.name,
         description: itemForm.description,
         type: itemForm.type,
@@ -486,6 +492,25 @@ export default function VirtualItemsPage() {
                     <div>
                       <h3 className="text-md font-medium text-black mb-4">Basic Information</h3>
                       <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Item ID 
+                            <span className="text-xs text-gray-500 ml-1">(for SDK use)</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={itemForm.itemId}
+                            onChange={(e) => setItemForm(prev => ({ ...prev, itemId: e.target.value }))}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="e.g., gold_coins"
+                            pattern="^[a-z0-9_]+$"
+                            title="Only lowercase letters, numbers, and underscores allowed"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">
+                            Use lowercase letters, numbers, and underscores only
+                          </p>
+                        </div>
+                        
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">Item Name</label>
                           <input
@@ -754,13 +779,16 @@ export default function VirtualItemsPage() {
                     )}
 
                     <div className="bg-gray-50 rounded-lg p-4">
-                      <h3 className="text-md font-medium text-black mb-2">Usage in Code</h3>
+                      <h3 className="text-md font-medium text-black mb-2">Usage in SDK</h3>
                       <p className="text-sm text-gray-600 mb-2">
-                        Reference this virtual item in your game code:
+                        Use this item ID in your SDK calls:
                       </p>
                       <code className="block bg-gray-800 text-green-400 p-3 rounded text-sm font-mono">
-                        VirtualItem.{selectedVirtualItem.id}
+                        await nandiSDK.getItemVariant('{selectedVirtualItem.itemId}')
                       </code>
+                      <p className="text-xs text-gray-500 mt-2">
+                        Item ID: <code className="bg-gray-200 px-1 rounded">{selectedVirtualItem.itemId}</code>
+                      </p>
                     </div>
 
                     {/* SKU Variants Section */}

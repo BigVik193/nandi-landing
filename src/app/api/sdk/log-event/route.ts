@@ -1,35 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/server';
+import { getAuthInfo, createUnauthorizedResponse } from '@/lib/auth/api-key-utils';
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate API key and get game ID
+    const authInfo = await getAuthInfo(request);
+    if (!authInfo.isValid) {
+      return createUnauthorizedResponse(authInfo.error || 'Invalid API key');
+    }
+
     const body = await request.json();
     const {
-      gameId,
       playerId, // This would be the actual player ID from your players table
       userId,   // This might be an external user ID
       eventType,
-      virtualItemId,
+      itemId,   // Developer-friendly item ID
       skuVariantId,
       experimentId,
       experimentArmId,
       sessionId,
-      properties = {},
-      apiKey
+      properties = {}
     } = body;
 
+    const gameId = authInfo.gameId;
+
     // Basic validation
-    if (!gameId || !eventType) {
+    if (!eventType) {
       return NextResponse.json(
-        { error: 'gameId and eventType are required' },
+        { error: 'eventType is required' },
         { status: 400 }
       );
     }
-
-    // TODO: Validate API key in production
-    // if (!apiKey) {
-    //   return NextResponse.json({ error: 'API key required' }, { status: 401 });
-    // }
 
     // Validate event type
     const validEventTypes = [
@@ -91,11 +93,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Resolve itemId to virtualItemId (UUID) for database storage
+    let resolvedVirtualItemId = null;
+    if (itemId) {
+      const { data: virtualItem } = await supabaseAdmin
+        .from('virtual_items')
+        .select('id')
+        .eq('game_id', gameId)
+        .eq('item_id', itemId)
+        .eq('status', 'active')
+        .maybeSingle();
+
+      if (virtualItem) {
+        resolvedVirtualItemId = virtualItem.id;
+      }
+    }
+
     // Insert the event
     const eventData = {
       player_id: resolvedPlayerId,
       event_type: eventType,
-      virtual_item_id: virtualItemId || null,
+      virtual_item_id: resolvedVirtualItemId || null,
       sku_variant_id: skuVariantId || null,
       experiment_id: experimentId || null,
       experiment_arm_id: experimentArmId || null,
@@ -179,7 +197,7 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { events, gameId, playerId, userId, apiKey } = body;
+    const { events, playerId, userId } = body;
 
     if (!events || !Array.isArray(events) || events.length === 0) {
       return NextResponse.json(
@@ -207,12 +225,13 @@ export async function PUT(request: NextRequest) {
           method: 'POST',
           body: JSON.stringify({
             ...event,
-            gameId: event.gameId || gameId,
             playerId: event.playerId || playerId,
-            userId: event.userId || userId,
-            apiKey
+            userId: event.userId || userId
           }),
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': request.headers.get('Authorization') || ''
+          }
         }));
 
         const result = await response.json();

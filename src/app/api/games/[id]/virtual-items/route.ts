@@ -48,6 +48,7 @@ export async function POST(
     const body = await request.json();
     
     const {
+      itemId,
       name,
       description,
       type,
@@ -74,6 +75,21 @@ export async function POST(
       );
     }
 
+    if (!itemId) {
+      return NextResponse.json(
+        { error: 'Item ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate itemId format (only lowercase letters, numbers, and underscores)
+    if (!/^[a-z0-9_]+$/.test(itemId)) {
+      return NextResponse.json(
+        { error: 'Item ID must contain only lowercase letters, numbers, and underscores' },
+        { status: 400 }
+      );
+    }
+
     // Verify that the game exists
     const { data: game } = await supabaseAdmin
       .from('games')
@@ -88,11 +104,27 @@ export async function POST(
       );
     }
 
+    // Check if itemId already exists for this game
+    const { data: existingItem } = await supabaseAdmin
+      .from('virtual_items')
+      .select('id')
+      .eq('game_id', gameId)
+      .eq('item_id', itemId)
+      .maybeSingle();
+
+    if (existingItem) {
+      return NextResponse.json(
+        { error: 'An item with this ID already exists in this game' },
+        { status: 400 }
+      );
+    }
+
     // Create the virtual item
     const { data: virtualItem, error: createError } = await supabaseAdmin
       .from('virtual_items')
       .insert({
         game_id: gameId,
+        item_id: itemId,
         name,
         description,
         type,
