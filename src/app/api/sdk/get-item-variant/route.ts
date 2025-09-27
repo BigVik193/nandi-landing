@@ -142,14 +142,65 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Step 2: Use bandit algorithm to select the best arm
+    // Step 2: Check for existing assignment or create new one
     const experiment = runningExperiments[0];
-    const banditService = new BanditService();
     
-    const selectedArmId = await banditService.selectVariantForUser(
-      experiment.id,
-      userId
-    );
+    // First, resolve userId to player_id
+    let playerId = null;
+    if (userId) {
+      const { data: player } = await supabaseAdmin
+        .from('players')
+        .select('id')
+        .eq('game_id', gameId)
+        .eq('external_player_id', userId)
+        .maybeSingle();
+      
+      playerId = player?.id;
+    }
+
+    let selectedArmId = null;
+
+    let isExistingAssignment = false;
+
+    // Check for existing assignment if we have a player ID
+    if (playerId) {
+      const { data: existingAssignment } = await supabaseAdmin
+        .from('assignments')
+        .select('experiment_arm_id')
+        .eq('player_id', playerId)
+        .eq('experiment_id', experiment.id)
+        .maybeSingle();
+
+      if (existingAssignment) {
+        selectedArmId = existingAssignment.experiment_arm_id;
+        isExistingAssignment = true;
+      }
+    }
+
+    // If no existing assignment, use bandit algorithm to select new arm
+    if (!selectedArmId) {
+      const banditService = new BanditService();
+      selectedArmId = await banditService.selectVariantForUser(
+        experiment.id,
+        userId
+      );
+
+      // Create assignment if we have both player ID and selected arm
+      if (playerId && selectedArmId) {
+        const { error: assignmentError } = await supabaseAdmin
+          .from('assignments')
+          .insert({
+            player_id: playerId,
+            experiment_id: experiment.id,
+            experiment_arm_id: selectedArmId
+          });
+
+        if (assignmentError) {
+          console.error('Failed to create assignment:', assignmentError);
+          // Continue anyway - don't fail the request
+        }
+      }
+    }
 
     if (!selectedArmId) {
       return NextResponse.json(
@@ -284,8 +335,10 @@ export async function POST(request: NextRequest) {
       trafficWeight: selectedArm.traffic_weight,
       eventToLog: eventData,
       metadata: {
-        selectionReason: 'bandit_algorithm',
-        algorithmUsed: 'thompson_sampling',
+        selectionReason: isExistingAssignment ? 'existing_assignment' : 'bandit_algorithm',
+        algorithmUsed: isExistingAssignment ? 'consistent_assignment' : 'thompson_sampling',
+        isExistingAssignment,
+        playerId,
         userId,
         platform,
         timestamp: new Date().toISOString()

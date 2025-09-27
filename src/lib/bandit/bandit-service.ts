@@ -72,6 +72,24 @@ export class BanditService {
     }));
   }
 
+  async getAssignmentCounts(experimentId: string): Promise<Record<string, number>> {
+    const { data: assignments, error } = await supabaseAdmin
+      .from('assignments')
+      .select('experiment_arm_id')
+      .eq('experiment_id', experimentId);
+
+    if (error) {
+      throw new Error(`Failed to fetch assignments: ${error.message}`);
+    }
+
+    return (assignments || []).reduce((acc: Record<string, number>, assignment) => {
+      if (assignment.experiment_arm_id) {
+        acc[assignment.experiment_arm_id] = (acc[assignment.experiment_arm_id] || 0) + 1;
+      }
+      return acc;
+    }, {});
+  }
+
   async getArmMetrics(experimentId: string, timeframeDays: number = 7): Promise<ArmMetrics[]> {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - timeframeDays);

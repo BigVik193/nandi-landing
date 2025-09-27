@@ -55,6 +55,7 @@ async function createAppleInAppPurchase(
             name: productName,
             productId: productId,
             inAppPurchaseType: productType,
+            state: 'READY_TO_SUBMIT',
             reviewNote: `Auto-generated SKU variant for A/B testing via Nandi`
           },
           relationships: {

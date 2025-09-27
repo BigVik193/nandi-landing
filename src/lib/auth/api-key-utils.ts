@@ -88,7 +88,8 @@ export async function validateApiKey(apiKey: string): Promise<ApiKeyInfo> {
     }
 
     // Check if the associated game is active
-    if (apiKeyRecord.games?.status !== 'active') {
+    const game = Array.isArray(apiKeyRecord.games) ? apiKeyRecord.games[0] : apiKeyRecord.games;
+    if (game?.status !== 'active') {
       return {
         gameId: '',
         isValid: false,

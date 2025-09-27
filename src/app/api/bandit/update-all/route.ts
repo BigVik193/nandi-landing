@@ -43,6 +43,7 @@ export async function GET(request: NextRequest) {
     const experimentSummaries = await Promise.all(
       experiments.map(async (experiment) => {
         const metrics = await banditService.getArmMetrics(experiment.id);
+        const assignmentCounts = await banditService.getAssignmentCounts(experiment.id);
         const shouldStop = await banditService.shouldStopExperiment(experiment.id);
         
         return {
@@ -51,6 +52,7 @@ export async function GET(request: NextRequest) {
           armsCount: experiment.arms.length,
           totalStoreViews: metrics.reduce((sum, m) => sum + m.storeViews, 0),
           totalPurchases: metrics.reduce((sum, m) => sum + m.purchases, 0),
+          totalAssignments: Object.values(assignmentCounts).reduce((sum, count) => sum + count, 0),
           overallConversionRate: (() => {
             const totalViews = metrics.reduce((sum, m) => sum + m.storeViews, 0);
             const totalPurchases = metrics.reduce((sum, m) => sum + m.purchases, 0);
@@ -64,6 +66,7 @@ export async function GET(request: NextRequest) {
               name: arm.name,
               trafficWeight: arm.trafficWeight,
               isControl: arm.isControl,
+              assignments: assignmentCounts[arm.id] || 0,
               storeViews: metric?.storeViews || 0,
               purchases: metric?.purchases || 0,
               conversionRate: (metric && metric.storeViews > 0) 

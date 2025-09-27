@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/bandit-update?token=${CRON_SECRET_TOKEN}",
+      "schedule": "0 */6 * * *"
+    }
+  ]
+}

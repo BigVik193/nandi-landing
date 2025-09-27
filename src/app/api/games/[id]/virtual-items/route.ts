@@ -147,9 +147,38 @@ export async function POST(
       );
     }
 
+    // After creating the virtual item, automatically create an AI-generated experiment
+    // This runs asynchronously to not block the response
+    if (virtualItem.id) {
+      console.log(`[Virtual Item Creation] Triggering AI experiment creation for: ${virtualItem.id}`);
+      
+      // Import and trigger experiment creation asynchronously
+      import('@/lib/ai/auto-experiment-creator').then(async ({ createExperimentForVirtualItem }) => {
+        try {
+          const experimentResult = await createExperimentForVirtualItem(virtualItem.id);
+          
+          if (experimentResult.success) {
+            console.log(`[Virtual Item Creation] AI experiment created successfully:`, {
+              virtualItemId: virtualItem.id,
+              experimentId: experimentResult.experimentId,
+              hypothesis: experimentResult.hypothesis?.hypothesis
+            });
+          } else {
+            console.warn(`[Virtual Item Creation] AI experiment creation failed:`, experimentResult.error);
+          }
+        } catch (error) {
+          console.error('[Virtual Item Creation] Error in AI experiment creation:', error);
+        }
+      }).catch(error => {
+        console.error('[Virtual Item Creation] Error importing AI experiment creator:', error);
+      });
+    }
+
     return NextResponse.json({
       success: true,
-      virtualItem
+      virtualItem,
+      aiExperimentTriggered: true,
+      message: 'Virtual item created successfully. AI experiment creation initiated in the background.'
     });
   } catch (error) {
     console.error('Virtual item creation error:', error);

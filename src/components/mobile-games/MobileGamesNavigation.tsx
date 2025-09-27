@@ -36,7 +36,7 @@ function GetStartedButton({ className, onClick }: { className: string; onClick?:
     setTimeout(() => setIsNavigating(false), 1000);
   };
 
-  const isLoading = loading || isNavigating;
+  const isLoading = isNavigating;
 
   return (
     <button

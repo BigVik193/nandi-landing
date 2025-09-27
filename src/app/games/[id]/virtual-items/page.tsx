@@ -62,6 +62,7 @@ export default function VirtualItemsPage() {
   const [skuVariants, setSKUVariants] = useState<any[]>([]);
   const [loadingSKUs, setLoadingSKUs] = useState(false);
   const [gameLoading, setGameLoading] = useState(true);
+  const [creatingExperiment, setCreatingExperiment] = useState(false);
   const [itemForm, setItemForm] = useState({
     itemId: '',
     name: '',
@@ -290,6 +291,33 @@ export default function VirtualItemsPage() {
       alert('Error saving virtual item');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const createExperiment = async (virtualItemId: string) => {
+    setCreatingExperiment(true);
+    try {
+      const response = await fetch(`/api/virtual-items/${virtualItemId}/create-experiment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        alert(`AI experiment created successfully!\n\nHypothesis: ${data.hypothesis?.hypothesis}\n\nExperiment ID: ${data.experimentId}\n\nSKU variants created: ${data.skuVariantsCreated}`);
+        // Reload the virtual items to show any updates
+        await loadVirtualItems();
+      } else {
+        alert('Failed to create experiment: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error creating experiment:', error);
+      alert('Error creating experiment. Please try again.');
+    } finally {
+      setCreatingExperiment(false);
     }
   };
 
@@ -705,6 +733,18 @@ export default function VirtualItemsPage() {
                       </div>
                     </div>
                     <div className="flex space-x-2">
+                      <button
+                        onClick={() => createExperiment(selectedVirtualItem.id)}
+                        disabled={creatingExperiment}
+                        className="p-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        title="Create AI Experiment"
+                      >
+                        {creatingExperiment ? (
+                          <div className="w-5 h-5 border-2 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <HiSparkles className="w-5 h-5" />
+                        )}
+                      </button>
                       <button
                         onClick={() => startEditing(selectedVirtualItem)}
                         className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
